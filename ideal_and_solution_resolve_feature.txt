@@ -165,3 +165,56 @@ Auth::class dựa vào config trong config/auth.php để biết được xác t
 
 	
 ################## check lai case request api ko set token moi, request tiep theo voi token cu van duoc
+
+
+
+##### DB design convention
+- All table name and column name use snake case
+- Use english language
+- Use singular noun
+- Use lower case
+- No longer more 64 character
+- Use name schema_name_DB_time for backup
+- Use only letters not number, no space, special character...
+- Table
+	+ Rename table include two table for intermediate table 
+	ex: table admin and table role has intermediate t_admin_role table
+	+ Name table has prefix t_name_table for almost table
+	+ Name table has prefix v_table_name for procedure view
+	+ Name table has prefix h_table_nam for history
+	+ Table use important has sunffes table_name_mst
+	+ Use prefix f_name_funtion (f: function) for function
+	+ Use tg_name_trigger (tg: trigger) for trigger
+
+- Column
+	+ Primary key
+		* Rename primary key is only id. 
+		* Rename with prefix PK for constraint
+		* Recommend use auto-increment, unique, unsigned 
+		* Data type is interger (not tinyint because too smaill 255 character, use bigint for record too much)
+	+ Foreign key
+		* Rename foreign key is (table foreign)_id
+		* Use prefix PK_{table name foreign}_{table name}_id  for references
+		* Use cascading for update not delete
+	+ Name column with prefix (is, has) for field boolean
+	+ Use field create_at, update_at for create and update in any table
+	
+	
+##### Flow tạo api
+- 1. Tạo file migration: Quản lý, đồng bộ database
+- 2. Tạo model: Crud data table
+- 3. Tạo factory: Quy định data type crud tạm
+- 4. Tạo seeder: Crud data tạm thời vào db
+- 5. Tạo controller: Điều hướng route
+- 6. Tạo route: Điều hướng path
+- 7. Tạo controller common: Handle các loại exception, rollback transaction, trả về cùng một kiểu response common
+- 8. Tạo singleton service: Khởi tạo object class 1 lần, lần sau tham chiếu đến object cũ mà ko cần instance mới object class
+- 9. Tạo common serive: Tạo xử lý logic common cho nhiều service xử dụng lại
+	9.1 Tạo handle manual validate common để control throw exception, rollback transaction và trả về response cùng kiểu,
+	trong laravel cũng có auto validate bằng cách sử dụng trực tiếp khi khai báo params, nhưng sẽ custom ở excetion riêng và khó handle rollback transaction
+	=> tạo handle manual validate common
+- 10. Tạo service: Phân tách việc handle logic
+- 11. Tạo request: validate payload request
+- 12. Tạo Repositories : Tạo data layer phân tách việc thao tác với db
+- 8. Tạo resource (quy định response data trả về)
+	
