@@ -1,0 +1,167 @@
+##### Dynamic website mutiple language
+- Solution
+	+ Use mutiple file config define variable common with same key but the value is value has translator for fer file
+	+ Design DB store data for multiple language, create new table with all column is common and multiple sub table with
+	columns need value translator (eg: fields price, discount, phone number,... is common and fields name_product, ... need translator)
+	+ Use api the third to transator payload before to CRUD data for per table language eg: google translate api
+	+ when use the third api to translator payload before update need handle when change data choose would use tranlator update other language
+	+ When admin create/update/delete a field will create a record in table history
+	ex: 
+		* Create a record will make full data for per column for history
+		* Update a record will make data for this fields update in history
+		* Delete a record will handle same create new record
+
+
+
+##### Ideal phân quyền
+	+ Mục tiêu: Phần quyền account có quyền access api, table và row id của table đó
+	+ Design DB
+		- Table store data quản lý truy cập api (tables X)
+			1. admin: Lưu trữ thông tin account
+			2. admin_role: lưu trữ data trung gian admin và role, ví dụ 1 admin có nhiều role và ngược lại
+			3. role: Lưu trữ role, mục đích để xác thực quyền truy cập của admin account dựa theo role
+			4. api_feature: Lưu trữ data trung gian role, feature, api. Vd 1 role có nhiểu feature, api và 1 feature hoặc 1 api tương tự
+			5. feature: lưu trữ data feature. vd feature category, product,...
+			6. api: Lưu trữ info api
+			
+		- Table store data quản lý truy cập table và record (table Y)
+			1. admin:....
+			2. admin_department: Lưu trữ data trung gian admin và departmet. vd 1 admin có nhiều department và ngược lại
+			3. department: Lưu trữ data phòng ban. Mục đích xác thực phòng ban có quyền quản lý đến table và record nào
+			4. department_management: Lưu chữ data trung gian department và policy. vd 1 department có nhiều policy và ngược lại
+			5. policy_department: Lưu chữ data table name và row id
+		
+	+ Nguyên lý hoạt động:
+		1. Ban đầu tạo bash insert data account root. Có toàn quyền truy cập data hiện tại
+		2. Mỗi khi insert data feature, api, policy_department. Insert data set quyền cho account hiện tại đang thao tác và trigger insert data tất cả account root
+		3. Tạo view sql :
+			3.1 admin_permission_view: Table view select api của account sent request. Check account sent request có được phép access api đang sent request ko
+			3.2 admin_policy_view: Table view select table name và row id của account sent request. Check account có được thao tác với table và row id đó ko
+			select, update, delete table thao tác inner join với admin_policy_view
+		
+		
+		
+		sửa table t_api_feature column api_id, feature_id cho phép null -> khi insert table api hoặc feature sẽ trigger insert data vào table này với role root 
+
+
+
+##### Function login use seesion và cookie
+	+ Step 1: Browser sent username and password to server via HTTP
+	+ Step 2: Server check is exist session, if not server create token unique and store to a file (path setting session.save_path in file php.ini)
+	+ Step 3: Server return browser a token (form cookie) create by this session
+	+ Step 4: Browser get cookie from header response and store in browser eg: cookie, local store,...
+	+ Step 5: Every next request, browser sent this cookie to server
+	+ Step 6: Server check cookie by session id, session store some info user (eg: id, email,...) -> server know who do this sent request
+
+
+
+##### Function remember login use session and cookie
+	+ Step 1: Browser sent username, pass and input remember me
+	+ Step 2: Server auth success, store a token to DB and return this token to browser store
+	+ Step 3: When session has been removed (set time session, cookie, check time activity, use js sent request remove session when close browser)
+	access to URL, use js auto check exist token remember if exist sent to server. After server check and return response
+
+
+
+##### Function login use jwt (json web token)
+	+ Step 1: Client sent request to server with params are credentials (user_name, password)
+	+ Step 2: Server authentication credentials EG: Check matching with data in DB
+		+ If fails -> return exception
+		+ If success -> create token return back via header http, token include
+			- Header: Include algorithm and type jwt Eg: {"alg": "HS256","typ": "JWT"}
+			- Payload: Include info user, time when JWT issued and Expiration time such as (ID, role, ...) EG: {"ID": 1, "type": "admin", "role": "manager"}
+			- Signature: Include Header, Payload, secrect key EG: 
+				HMACSHA256(
+				  base64UrlEncode(header) + "." +
+				  base64UrlEncode(payload),
+				  secret)
+			- Return string encode and encrypt : header . payload . signature
+	+ Step 3: Client get token from response and store in browser, every next request sent this token in header http
+	+ Step 4: Server
+		+ Get JWT from request header. (v)
+		+ Decrypt the JWT using the server's private key. (v)
+		+ Verify signatures to ensure token integrity. (v)
+		+ Check the expiration date (if any) to ensure the token has not expired. (v)
+		+ Analyze payload to determine user information (user exist in db)
+		+ If the token is valid:
+		+ Allow access to the requested resource.
+		+ If the token is invalid:
+		+ Returns validation error.
+	+ Step 5: Server store JWT list: use cache (not recommend), redis
+		+ Create new JWT store in DB
+		+ Remove old JWT strore in DB
+		+ Set response header with auth = new JWT and return to client
+
+
+
+##### Redis: Tương tự như DB thông thường, nhưng lưu trữ dạng cache hay data memory (lưu bằng ram, mất data khi ngắt kết nối, sập server), lưu data mang giá trị tạm thời,
+không như DB thông thường lưu ở disk -> không mất data khi ngắt kết nối. Có khả năng truy xuất data nhanh. Lưu chữ data dạng key-value pair
+	key: Là path để truy vấn data eg: user:1, xyz:abc:1,.. trong đó ký tự : như là / path tới folder 
+	Value: Có nhiều dạng data type như : string, hash, list,...
+	Cách thức sử dụng:
+	+ Step 1: Sử dụng laragon app hỗ trợ tạo server web, config tạo server redis, dùng tool UI là Redis Insight connect với server redis để quản lý data
+	+ Step 2: Sau khi có server redis, để dùng redis trong PHP cần cài extension Predis or PhpRedis. Mực đích để php có thể comunicate với server redis
+	Nó giống với extension pdo_pgsql để php có thể comunicate với DB postgresql vậy
+	+ Step 3: install via composer: composer require predis/predis
+	+ Step 4: setting REDIS_CLIENT=predis in .env
+	+ Step 5: Trong các class cần thao tác với redis cần use Illuminate\Support\Facades\Redis;
+	+ Step 6: CRUD redis sử dụng data type là hashes (loại này có value dạng json, giống như table trong DB thông thường)
+		redis::hset('key', 'value') : set 1 value
+		redis::hmset('key', ['name'=>'abc', 'email'=>'email@email.com']): Set multiple field and value of a value
+		redis::hget('key', 'field'): get a value by key and field name
+		redis::hmget('key', ['name', 'email']): get name and email by key
+		...
+
+
+	
+##### Middleware custom: là 1 phần mềm trung gian, có chức năng tiền|hậu xử lý request. VD chức năng xác thực 1 request gửi đến có được quyền truy cập hay không
+	+ Step 1: Create file middleware handle request with command line => php artisan make:middleware AdminMiddleware
+	+ Step 2: (MAYBE) Regsiter middleware in bootstrap/app.php function middleware and alias name
+	+ Step 3: Set middleware for router need use eg: Route::middleware(AdminMiddleware::class)->get('action', [controller::class, 'name']);
+
+
+
+##### Xác thực trong laravel sử dụng Auth::class, class này có nhiều phương thức liên quan đến xác thực (xác thực login, get info user đã xác thực, tạo token,...)
+Auth::class dựa vào config trong config/auth.php để biết được xác thực dựa trên data từ model (table) nào 
+	+ Method Auth::attempt(): Là cơ chế xác thực của laravel. Nhận tham số credentials và tiến hành đối chiếu với data trong db để xác thực
+		- Cách thức hoạt động
+			* Step 1: Nhận tham số là một array dạng key-value
+			(key-value đó chính là column name và value của table trong DB. Thường thì fill key user_name hoặc email và password của 1 table)
+			* Step 2: Tự động truy xuất data dựa trên config, mặc định thực hiện từ default->guard->provider->model trong file config/auth.php để xác định table cần truy xuất.
+			Nếu ko sử dụng setting default thì cần tạo guard Eg: adminAuth
+			Dựa vào config guard->provider->model trong file config/auth.php để xác định table cần truy xuất
+			Khi thao tác Auth::class với guard đã custom thì syntax là Auth::guard('adminAuth') ví dụ xác thực login: Auth::guard('adminAuth')->attempt()
+			* Step 3: Sau khi truy vấn có data, tiến hành so sánh hash password
+			* Step 4: Trả về kết quả. Nếu thất bại trả về false. Nếu thành công Auth::guard('adminAuth')->user() sẽ trả về model của user
+
+
+
+##### Database:
+	+ Tạo folder tables, views, proceduces phân chia quản lý riêng cho từng thành phần
+	Mặc định laravel run file migrate theo thứ tự thời gian. Để custom tạo nhiều folder, sub folder, file migrate và run all migrate theo thứ tự cần thực hiện:
+	run migrate theo path:  EG: php artisan migrate --path=database/migrations/tables/masters
+		Step 1: Table
+			tables/masters/* -> tables/histories
+		Step 2: Triggers
+		Step 3: Views
+	Cái này nghiên cứu sau
+	
+	+ Sequence: Là 1 chuỗi số nguyên (integer), tuân theo một quy tắc dev định nghĩa.
+	Mục đích sử dụng trong project là để tạo chỉ mục (index) tự động tăng, định nghĩa riêng cho từng row,
+	có thể quản lý được range min max của value, start value, step increment... 
+	Thay vì dùng auto increment trong DB (index thực thi theo quy tắc mặc định, không control) VD: Table nhỏ có data cố định không cần thiết số lượng record quá lớn,...
+	
+	+ View: Table ảo. Data dựa trên nhiều data của table khác nhau. Lợi ích là đơn giản hóa query, bảo mật, maintain, hiệu xuất tốt (vì thực hiện trực tiếp trên DB thay vì thực
+	thi từ nơi khác gửi query đến).
+	
+	+ Indexing:
+
+
+
+##### Clear cache laravel
+	+ php artisan config:cache
+	+ php artisan config:clear
+	+ php artisan cache:clear
+
+	
+################## check lai case request api ko set token moi, request tiep theo voi token cu van duoc

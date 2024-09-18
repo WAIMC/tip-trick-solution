@@ -1,0 +1,44 @@
+##### Remote device
+  - anydesk : remote thiết bị điện tử cùng dùng chung app, connect via ID
+  - remote desktop connection : Mặc định có trong window, connect mạng nội bộ dựa vào vpn
+
+#### UI database management
+  - dbeaver : Tạo connect và quản lý DB
+  - phpmyadmin : Tạo và quản lý DB
+  - mysql workbench : Tạo và quản lý DB mysql
+  - microsoft access: Tạo và quản lý DB microsoft sql
+  - redis insight: Quản lý DB redis
+
+#### Web service build env
+  - laragon : Quản lý web services, php, nodejs, redis, DB,...
+  - xampp control pannel: Quản lý web service, mysql, filezilla,...
+  - docker : Quản lý web services,...
+  - virual machine: Tạo máy ảo cài tech cho ENV
+  - localhost: cài tech cho source
+
+#### record/snap/edit image và video
+  - snagit
+
+#### git management
+  - gitkraken : Ngon nhưng cần cack
+  - fork: free nhưng không có tính năng undo/redo giống gitkraken
+
+#### Design UI
+ - photoshop : Cần crack
+ - figma : 
+
+#### Giả lập điện thoại
+ - blustack:
+ - noxplayer
+
+#### code edit UI
+ - vscode: Nhẹ, dễ dùng, thiếu gì thì cài extension
+ - phpstorm : ngon, không free, nặng
+ - webstorm : làm FE ngon, ko free, nặng
+
+#### Test connect
+  - postman: dễ dùng, test api, integration test
+  - jmeter: khó dùng hơn postman, test performance, loading,...
+
+#### Vẽ lược đồ
+  - startUml: vẽ được nhiều thứ ERD, use case diagram,...

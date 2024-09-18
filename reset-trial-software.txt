@@ -1,0 +1,20 @@
+******************* Tip reset trial software
+1. uninstall normally
+
+2. navigate to your appdata folder (usually c:\users\username\appdata)
+and check local locallow and roaming for any folders related to your program and delete them
+type %temp% in explorer and delete everything there.
+
+3. this is the risky part, press windows+r and type in "regedit" to open the registry editor.
+Once in registry edit search under both HKEY_CURRENT_USER>SOFTWARE and HKEY_LOCAL_MACHINE>SOFTWARE for your software and delete the folder related to your software.
+
+4. Restart your system
+
+5. Instal trial software for a new trial period
+
+
+
+******************* Tip reset trial software2
+1. press window: %temp% -> Delete everything there
+2. press window + r -> regedit -> HKEY_LOCAL_MACHINE>SOFTWARE -> delete folder software
+3. Open software
