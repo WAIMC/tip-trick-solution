@@ -1,0 +1,61 @@
+1. Kiến thức nền tảng về PHP
+	PHP Core: Thành thạo cú pháp và các tính năng của PHP như biến, hằng, hàm, mảng, vòng lặp, điều kiện, v.v.
+	Lập trình hướng đối tượng (OOP): Hiểu và áp dụng các nguyên lý của OOP (class, object, inheritance, polymorphism, encapsulation, abstraction).
+	Namespace và autoloading: Biết cách sử dụng namespace và cấu hình autoloading (PSR-4).
+	Xử lý lỗi và ngoại lệ: Thành thạo trong việc bắt và xử lý lỗi, sử dụng try-catch và custom exceptions.
+2. Framework PHP
+	Laravel: Một dev PHP 3 năm kinh nghiệm nên hiểu rõ cách sử dụng Laravel framework, bao gồm:
+	Routing.
+	Eloquent ORM.
+	Validation.
+	Middleware.
+	Blade templates.
+	Dependency injection.
+	Các framework khác: Nên có kiến thức về ít nhất một framework khác như Symfony, CodeIgniter, hoặc Yii.
+3. Cơ sở dữ liệu (Database)
+	MySQL / PostgreSQL: Thành thạo viết các truy vấn SQL phức tạp, bao gồm:
+	JOIN, GROUP BY, HAVING, subquery.
+	Transaction (giao dịch).
+	Indexing và tối ưu hóa truy vấn.
+	ORM (Object-Relational Mapping): Thành thạo việc sử dụng ORM (như Eloquent) để làm việc với cơ sở dữ liệu theo mô hình hướng đối tượng.
+	Thiết kế cơ sở dữ liệu: Hiểu cách thiết kế cơ sở dữ liệu với quan hệ chuẩn hóa và tối ưu hoá.
+4. API và Web Services
+	RESTful API: Hiểu về cách xây dựng và sử dụng API theo kiến trúc REST. Biết cách thiết lập routes và sử dụng các HTTP methods (GET, POST, PUT, DELETE).
+	Authentication & Authorization: Sử dụng JWT (JSON Web Token) hoặc OAuth2 để xác thực và phân quyền người dùng.
+	SOAP API: Có kiến thức về SOAP để xử lý các hệ thống cũ.
+5. Công cụ và công nghệ liên quan
+	Composer: Hiểu cách sử dụng Composer để quản lý thư viện và gói phần mềm.
+	Git: Thành thạo các thao tác Git cơ bản và nâng cao (branching, merging, rebasing, pull request).
+	CI/CD: Có kinh nghiệm với các hệ thống tích hợp liên tục và triển khai tự động như Jenkins, Travis CI, GitLab CI.
+6. Bảo mật web
+	SQL Injection: Hiểu rõ các kỹ thuật phòng chống SQL Injection (Prepared Statements).
+	XSS (Cross-Site Scripting): Biết cách phòng tránh XSS bằng cách lọc và xác thực dữ liệu đầu vào.
+	CSRF (Cross-Site Request Forgery): Sử dụng token để bảo vệ chống lại CSRF.
+	HTTPS: Biết cách thiết lập và yêu cầu HTTPS trong các ứng dụng web.
+7. Frontend cơ bản
+	HTML/CSS: Nắm vững về cấu trúc HTML và CSS để xây dựng giao diện người dùng cơ bản.
+	JavaScript: Có kiến thức cơ bản về JavaScript, bao gồm thao tác DOM, xử lý sự kiện, và AJAX để tương tác với backend.
+	Frontend Framework: Có kiến thức cơ bản về một số framework JavaScript như Vue.js hoặc React để xây dựng giao diện động.
+8. Kiến trúc ứng dụng
+	MVC (Model-View-Controller): Hiểu rõ mô hình MVC và cách áp dụng trong các ứng dụng PHP, đặc biệt là trong các framework như Laravel.
+	Design Patterns: Có kiến thức về các mẫu thiết kế phổ biến như Singleton, Factory, Dependency Injection, Repository Pattern.
+9. DevOps cơ bản
+	Triển khai ứng dụng: Có kinh nghiệm với việc triển khai ứng dụng PHP lên các server như:
+	Apache hoặc Nginx.
+	Docker: Sử dụng Docker để container hóa ứng dụng.
+	Version Control: Thành thạo sử dụng Git, biết quản lý mã nguồn, tạo nhánh (branch) và pull request.
+10. Testing
+	Unit Test: Biết cách viết và thực thi các unit test để kiểm tra chức năng của từng phần trong ứng dụng.
+	Integration Test: Hiểu cách viết các bài kiểm tra tích hợp (integration test) để đảm bảo các thành phần trong hệ thống hoạt động đúng khi kết hợp với nhau.
+	PHPUnit: Sử dụng PHPUnit để kiểm tra mã nguồn.
+11. Hiểu biết về hệ thống
+	Caching: Hiểu về các kỹ thuật caching như Redis, Memcached để tối ưu hiệu suất ứng dụng.
+	Session Management: Quản lý phiên đăng nhập của người dùng một cách an toàn và hiệu quả.
+	Linux Commands: Biết sử dụng các lệnh cơ bản của Linux để quản lý server, deploy code, và kiểm tra logs.
+12. Kỹ năng mềm
+	Kỹ năng giải quyết vấn đề: Có khả năng xử lý các vấn đề phát sinh trong quá trình phát triển, từ lỗi nhỏ đến các vấn đề liên quan đến kiến trúc hệ thống.
+	Giao tiếp: Có khả năng giao tiếp hiệu quả với các thành viên trong team, quản lý và khách hàng.
+	Tự học và cập nhật kiến thức: Ngành công nghệ thay đổi nhanh chóng, developer cần luôn cập nhật các công nghệ và phương pháp mới nhất.
+13. Hiểu biết về quy trình phát triển phần mềm
+	Agile/Scrum: Có kinh nghiệm làm việc trong các môi trường Agile hoặc Scrum, biết cách quản lý công việc theo sprint, task và user story.
+	Trello/Jira: Thành thạo sử dụng các công cụ quản lý dự án như Trello hoặc Jira để theo dõi tiến độ và quản lý task.

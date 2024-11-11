@@ -61,39 +61,6 @@
 	+ Step 3: When session has been removed (set time session, cookie, check time activity, use js sent request remove session when close browser)
 	access to URL, use js auto check exist token remember if exist sent to server. After server check and return response
 
-
-
-##### Function login use jwt (json web token)
-	+ Step 1: Client sent request to server with params are credentials (user_name, password)
-	+ Step 2: Server authentication credentials EG: Check matching with data in DB
-		+ If fails -> return exception
-		+ If success -> create token return back via header http, token include
-			- Header: Include algorithm and type jwt Eg: {"alg": "HS256","typ": "JWT"}
-			- Payload: Include info user, time when JWT issued and Expiration time such as (ID, role, ...) EG: {"ID": 1, "type": "admin", "role": "manager"}
-			- Signature: Include Header, Payload, secrect key EG: 
-				HMACSHA256(
-				  base64UrlEncode(header) + "." +
-				  base64UrlEncode(payload),
-				  secret)
-			- Return string encode and encrypt : header . payload . signature
-	+ Step 3: Client get token from response and store in browser, every next request sent this token in header http
-	+ Step 4: Server
-		+ Get JWT from request header. (v)
-		+ Decrypt the JWT using the server's private key. (v)
-		+ Verify signatures to ensure token integrity. (v)
-		+ Check the expiration date (if any) to ensure the token has not expired. (v)
-		+ Analyze payload to determine user information (user exist in db)
-		+ If the token is valid:
-		+ Allow access to the requested resource.
-		+ If the token is invalid:
-		+ Returns validation error.
-	+ Step 5: Server store JWT list: use cache (not recommend), redis
-		+ Create new JWT store in DB
-		+ Remove old JWT strore in DB
-		+ Set response header with auth = new JWT and return to client
-
-
-
 ##### Redis: Tương tự như DB thông thường, nhưng lưu trữ dạng cache hay data memory (lưu bằng ram, mất data khi ngắt kết nối, sập server), lưu data mang giá trị tạm thời,
 không như DB thông thường lưu ở disk -> không mất data khi ngắt kết nối. Có khả năng truy xuất data nhanh. Lưu chữ data dạng key-value pair
 	key: Là path để truy vấn data eg: user:1, xyz:abc:1,.. trong đó ký tự : như là / path tới folder 
@@ -135,70 +102,10 @@ Auth::class dựa vào config trong config/auth.php để biết được xác t
 			* Step 4: Trả về kết quả. Nếu thất bại trả về false. Nếu thành công Auth::guard('adminAuth')->user() sẽ trả về model của user
 
 
-
-##### Database:
-	+ Tạo folder tables, views, proceduces phân chia quản lý riêng cho từng thành phần
-	Mặc định laravel run file migrate theo thứ tự thời gian. Để custom tạo nhiều folder, sub folder, file migrate và run all migrate theo thứ tự cần thực hiện:
-	run migrate theo path:  EG: php artisan migrate --path=database/migrations/tables/masters
-		Step 1: Table
-			tables/masters/* -> tables/histories
-		Step 2: Triggers
-		Step 3: Views
-	Cái này nghiên cứu sau
-	
-	+ Sequence: Là 1 chuỗi số nguyên (integer), tuân theo một quy tắc dev định nghĩa.
-	Mục đích sử dụng trong project là để tạo chỉ mục (index) tự động tăng, định nghĩa riêng cho từng row,
-	có thể quản lý được range min max của value, start value, step increment... 
-	Thay vì dùng auto increment trong DB (index thực thi theo quy tắc mặc định, không control) VD: Table nhỏ có data cố định không cần thiết số lượng record quá lớn,...
-	
-	+ View: Table ảo. Data dựa trên nhiều data của table khác nhau. Lợi ích là đơn giản hóa query, bảo mật, maintain, hiệu xuất tốt (vì thực hiện trực tiếp trên DB thay vì thực
-	thi từ nơi khác gửi query đến).
-	
-	+ Indexing:
-
-
-
 ##### Clear cache laravel
 	+ php artisan config:cache
 	+ php artisan config:clear
 	+ php artisan cache:clear
-
-	
-################## check lai case request api ko set token moi, request tiep theo voi token cu van duoc
-
-
-
-##### DB design convention
-- All table name and column name use snake case
-- Use english language
-- Use singular noun
-- Use lower case
-- No longer more 64 character
-- Use name schema_name_DB_time for backup
-- Use only letters not number, no space, special character...
-- Table
-	+ Rename table include two table for intermediate table 
-	ex: table admin and table role has intermediate t_admin_role table
-	+ Name table has prefix t_name_table for almost table
-	+ Name table has prefix v_table_name for procedure view
-	+ Name table has prefix h_table_nam for history
-	+ Table use important has sunffes table_name_mst
-	+ Use prefix f_name_funtion (f: function) for function
-	+ Use tg_name_trigger (tg: trigger) for trigger
-
-- Column
-	+ Primary key
-		* Rename primary key is only id. 
-		* Rename with prefix PK for constraint
-		* Recommend use auto-increment, unique, unsigned 
-		* Data type is interger (not tinyint because too smaill 255 character, use bigint for record too much)
-	+ Foreign key
-		* Rename foreign key is (table foreign)_id
-		* Use prefix PK_{table name foreign}_{table name}_id  for references
-		* Use cascading for update not delete
-	+ Name column with prefix (is, has) for field boolean
-	+ Use field create_at, update_at for create and update in any table
-	
 	
 ##### Flow tạo api
 - 1. Tạo file migration: Quản lý, đồng bộ database

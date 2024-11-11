@@ -1,0 +1,54 @@
+
+
+##### Database:
+	+ Tạo folder tables, views, proceduces phân chia quản lý riêng cho từng thành phần
+	Mặc định laravel run file migrate theo thứ tự thời gian. Để custom tạo nhiều folder, sub folder, file migrate và run all migrate theo thứ tự cần thực hiện:
+	run migrate theo path:  EG: php artisan migrate --path=database/migrations/tables/masters
+		Step 1: Table
+			tables/masters/* -> tables/histories
+		Step 2: Triggers
+		Step 3: Views
+	Cái này nghiên cứu sau
+	
+	+ Sequence: Là 1 chuỗi số nguyên (integer), tuân theo một quy tắc dev định nghĩa.
+	Mục đích sử dụng trong project là để tạo chỉ mục (index) tự động tăng, định nghĩa riêng cho từng row,
+	có thể quản lý được range min max của value, start value, step increment... 
+	Thay vì dùng auto increment trong DB (index thực thi theo quy tắc mặc định, không control) VD: Table nhỏ có data cố định không cần thiết số lượng record quá lớn,...
+	
+	+ View: Table ảo. Data dựa trên nhiều data của table khác nhau. Lợi ích là đơn giản hóa query, bảo mật, maintain, hiệu xuất tốt (vì thực hiện trực tiếp trên DB thay vì thực
+	thi từ nơi khác gửi query đến).
+	
+	+ Indexing:
+
+
+
+##### DB design convention
+- All table name and column name use snake case
+- Use english language
+- Use singular noun
+- Use lower case
+- No longer more 64 character
+- Use name schema_name_DB_time for backup
+- Use only letters not number, no space, special character...
+- Table
+	+ Rename table include two table for intermediate table 
+	ex: table admin and table role has intermediate t_admin_role table
+	+ Name table has prefix t_name_table for almost table
+	+ Name table has prefix v_table_name for procedure view
+	+ Name table has prefix h_table_nam for history
+	+ Table use important has sunffes table_name_mst
+	+ Use prefix f_name_funtion (f: function) for function
+	+ Use tg_name_trigger (tg: trigger) for trigger
+
+- Column
+	+ Primary key
+		* Rename primary key is only id. 
+		* Rename with prefix PK for constraint
+		* Recommend use auto-increment, unique, unsigned 
+		* Data type is interger (not tinyint because too smaill 255 character, use bigint for record too much)
+	+ Foreign key
+		* Rename foreign key is (table foreign)_id
+		* Use prefix PK_{table name foreign}_{table name}_id  for references
+		* Use cascading for update not delete
+	+ Name column with prefix (is, has) for field boolean
+	+ Use field create_at, update_at for create and update in any table

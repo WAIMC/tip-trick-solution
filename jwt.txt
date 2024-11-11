@@ -1,0 +1,117 @@
+##### Overview
+
+JWT là một token string được mã hóa bất đối xứng theo một tiêu chuẩn, mục đích tạo ra là để chia sẻ thông tin một cách bảo mật,
+vì là mã hóa bất đối xứng lên việc mã hóa và giải mã chỉ từ 1 phía, do đó an toàn hơn khi xác thực nguồn gốc thông tin, dễ dàng quản lý
+với chỉ cần custom từ 1 phía mã hóa và giải mã sẽ có tác động lên diện rộng.
+
+
+##### Content
+
+go to browser -> search -> jwt
+
+
+##### Application
+
+- authentication: dùng cho xác thực danh tính user khi login, logout
+- authorization: kiểm tra quyền truy cập của user
+- exchange information: xác định danh tính và có hành động phù hợp
+- single sign-on (sso): đăng nhập một lần mà có thể quản lý truy cập nhiều hệ thống khác nhau VD: login facebook có thể dùng insta, mess,.. mà ko
+cần login lại, hoặc logout 1 facebook thì các ứng dụng đó cũng tự logout
+- API và microservice: Giúp xác thực và ủy quyền dùng cho nhiều domain khác nhau có cùng secrect keys, hạn chế lưu trữ giảm tải cho server
+vd như dùng access token để authentication mà ko cần lưu trữ, black list lưu trữ refresh token 1 cách chọn lọc hạn chế lưu trữ mà có tính
+năng như dùng seesion
+-
+
+
+##### all step implement for feature login, logout
+- 1/ Client sent request to server with params are credentials (user_name, password)
+- 2/ Server authentication credentials EG: Check matching with data in DB
+  2.1/ If fails -> return exception authentication
+  2.2/ If success -> create 2 tokens and return back via header http, token include
+    * Header: Include algorithm and type jwt Eg: {"alg": "HS256","typ": "JWT"}
+    * Payload: Include info user, time when JWT issued and Expiration time such as (ID, role, ...) EG: {"ID": 1, "type": "admin", "role": "manager"}
+    * Signature: Include Header, Payload, secrect key EG: 
+      HMACSHA256(
+        base64UrlEncode(header) + "." +
+        base64UrlEncode(payload),
+        secret)
+    * Return string encode and encrypt : header . payload . signature
+    * Việc server sẽ trả về 2 token:
+  	2.2.1/ Access token: dùng để xác thực, set time life ngắn, trả về payload body response, (là string jwt config secrect key riêng)
+	  2.2.2/ Refresh token: dùng để call api lấy token mới khi token cũ hết hạn, trả về cookie httponly same site (là string jwt config sercet key riêng)
+- 3/ Client get token from response and store in browser
+	+ Access token: lấy access token từ body response, sau đó lưu trong local store hoặc session store
+	+ Refresh token: lưu trong httponly cookie, same site, secure
+- 4/ Mỗi lần gửi request lên sẽ kèm theo access token trong header api (Authorization: Bearer <access_token>)
+- 5/ Mỗi lần nhận request thì server
+  + Get JWT from request header.
+  + Decrypt the JWT using the server's private key.
+  + Verify signatures to ensure token integrity.
+  + Check the expiration date (if any) to ensure the token has not expired.
+  + Analyze payload to determine user information (user exist in db)
+  + If the token is valid: Allow access to the requested resource.
+  + If the token is invalid: Returns validation error.
+- 6/ khi client nhận response từ server
+  6.1/ Nếu ko có lỗi: Tiếp tục xử lý logic
+  6.2/ Nếu có lỗi:
+    6.2.1/ Token ko hợp lệ -> redirect login
+    6.2.2/ token hết hạn -> check tồn tại refresh token
+      6.2.2.1/ Nếu ko có thì redirect login, vì refresh token sẽ set time tồn tại khi lưu, nên khi hết hạn sẽ tự xóa hoặc khi logout
+      6.2.2.2/ Nếu tồn tại,	client tự động gửi request refresh token để lấy access token mới
+- 7/ server verify refresh token
+  các step verify refresh token tương tự access token ở step 5/, sau đó check refresh token có tồn tại trong black list hay ko,
+  nếu có là ko hợp lệ
+	7.1/ Nếu hợp lệ của refresh token, thì return về access token và refresh token mới cho client
+	7.2/ Nếu không hợp lệ refresh token thì return error
+- 8/ Client nhận response
+  8.1/ Nếu success thì update lại refresh token và access token
+  8.2/ Nếu không hợp lệ thì xóa lưu trữ access token và refresh token, sau đó redirect login lại
+- 9/ client call logout
+	9.1/ Phía server sẽ lưu trữ refresh token vào blacklist + set thời gian tồn tại của Data này trong DB tương ứng với time life refresh token,
+	blacklist sẽ check request mỗi lần refresh token và redirect response xóa cookie refresh token
+	+ phía client nhận response thành công sẽ xóa refresh token và access token
+
+
+##### All problems and solutions when using
+- Access token (jwt): là token để client gửi lên server verify và có thời gian ngắn vd: 15p hoặc 1H
+
+- Refresh token: token này ko xác thực API mà dùng để request 1 access token mới khi hết hạn và có time life dài khoảng vài giờ hoặc ngày
+
+- Token black listting:
+	+ Vấn đề: Vì bản chất jwt là stateless (ko lưu trữ), khi client logout thì token đó vẫn còn valid và đang còn thời hạn sử dụng, khi server verify token
+	sẽ ko bị lỗi, do đó các token đã logout vẫn dùng được bình thường.
+	+ Giải pháp: Khi logout thì lưu trữ token valid và còn thời gian sử dụng lại (stateful). Dùng cho refresh token vì lưu trữ lâu dài, 
+	còn access token thì ko do time life ngắn và có refresh token làm mới lại rồi
+	+ Cách tiến hành:
+		* Khi logout, lưu trữ token đó lại. Về hình thức lưu trữ, trường hợp dùng database thì cần dùng cronjobs/schedule để set time xóa token đó khi hết hạn,
+		trường hợp dùng cache như redis thì setup time tồn tại của record đó. Vì các token hết hạn, thì khi verify token bị fail rồi nên ko cần lưu trữ.
+		* Mỗi lần verify token thì thêm 1 step check tồn tại trong blacklistting, nếu có thì throw exception authentication
+
+- refresh token: 
+	+ Vấn đề : Để tăng tính bảo mật cho access token (dùng để authentication mỗi request) lên cần thay đổi liên tục.
+	Thay vì, phương pháp cấp lại access token mỗi request, thì để giảm tải cho hệ thống nên có phương pháp khác đó là setup time life ngắn cho access token
+	do đó cần login lại nhiều lần
+	+ Giải pháp: Khi access token hết hạn, thì tự động gửi request với 1 token (refresh token) để verify và nhận dạng user. Sau đó sẽ tạo và return access token mới
+	mà ko cần login lại khi access token hết hạn.
+	+ Cách tiến hành: 
+		* Ban đầu, khi login success phía server sẽ return về refresh token và access token
+		* Phía client sẽ lưu trữ refresh token (lưu ở cookie, http only, same site) và access token lại
+		* Mỗi lần client gửi request lên server sẽ đính kèm access token vào để authentication
+		* Khi access token hết hạn, request gửi đến server sẽ verify token và bị throw exception authentication
+		* Phía client sau khi nhận response throw exception authentication, sẽ kiểm tra tồn tại refresh token, nếu có tự động gửi request
+		với đính kèm refresh token
+		* Server verify refresh token hợp lệ, dùng thông tin trong refresh token để nhận dạng user, returrn về access token và refresh token mới.
+		Vì refresh token có expire lâu, khi refresh token bị lộ thì attacker có thể dùng refresh token trong thời gian dài và refresh token ít khi sử dụng,
+		do đó cần thay đổi refresh token mỗi lần sử dụng
+		* Phía client nhận response thì update lại refresh token và access token
+
+- Rotating secrects:
+	+ Vấn đề: Vì secrect key là thành tố chính để tạo token + tiến bộ khoa học kỹ thuật khiến decode token ngày càng rút ngắn, do đó cần có phương
+	án khiến decode token phức tạp hơn nhằm kéo dài thời gian decode làm giảm tính khả thi việc decode, hoặc đơn giản là secrect key bị lộ
+	+ Giải pháp: Thay đổi secrect key định kỳ làm vô hiệu hóa các secrect key cũ
+	+ Cách tiến hành:
+		* Định kỳ sẽ random hoặc chỉ định theo list secrect keys
+	+ Ưu điểm: Ngăn ngừa hoặc giảm thời gian sử dụng secrect key bị lộ trên diện rộng 
+	+ Nhược điểm: Khó khăn khi quản lý secrect key list tránh lỗ hổng bảo mật, ảnh hưởng UX user do cần signin lại để lấy token mới
+
+- Token version
