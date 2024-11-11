@@ -1,5 +1,3 @@
-
-
 ##### Database:
 	+ Tạo folder tables, views, proceduces phân chia quản lý riêng cho từng thành phần
 	Mặc định laravel run file migrate theo thứ tự thời gian. Để custom tạo nhiều folder, sub folder, file migrate và run all migrate theo thứ tự cần thực hiện:
@@ -36,7 +34,7 @@
 	+ Name table has prefix t_name_table for almost table
 	+ Name table has prefix v_table_name for procedure view
 	+ Name table has prefix h_table_nam for history
-	+ Table use important has sunffes table_name_mst
+	+ Table use important has snuffer table_name_mst
 	+ Use prefix f_name_funtion (f: function) for function
 	+ Use tg_name_trigger (tg: trigger) for trigger
 
@@ -45,10 +43,12 @@
 		* Rename primary key is only id. 
 		* Rename with prefix PK for constraint
 		* Recommend use auto-increment, unique, unsigned 
-		* Data type is interger (not tinyint because too smaill 255 character, use bigint for record too much)
+		* Data type is integer (not tinyint because too small 255 character, use bigint for record too much)
 	+ Foreign key
 		* Rename foreign key is (table foreign)_id
 		* Use prefix PK_{table name foreign}_{table name}_id  for references
 		* Use cascading for update not delete
 	+ Name column with prefix (is, has) for field boolean
 	+ Use field create_at, update_at for create and update in any table
+
+	https://docs.google.com/spreadsheets/d/1bx4oWgkpjXp2T1XNP0Tr8q0T2KolY2RyEncAbYguDds/edit?usp=sharing

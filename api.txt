@@ -1,0 +1,18 @@
+##### Flow tạo api
+- 1. Tạo migration: Quản lý, đồng bộ database
+- 2. Tạo model: Crud data table
+- 3. Tạo factory: Quy định data type crud tạm
+- 4. Tạo seeder: Crud data tạm thời vào db
+- 5. Tạo route: Điều hướng path
+- 6. Tạo controller common: Handle các loại exception, rollback transaction, trả về cùng một kiểu response common
+- 7. Tạo controller: Điều hướng route
+- 8. Tạo singleton service: Khởi tạo object class 1 lần, lần sau tham chiếu đến object cũ mà ko cần instance mới object class
+- 9. Tạo common service: Tạo xử lý logic common cho nhiều service xử dụng lại
+	9.1 Tạo handle manual validate common để control throw exception, rollback transaction và trả về response cùng kiểu,
+	trong laravel cũng có auto validate bằng cách sử dụng trực tiếp khi khai báo params, nhưng sẽ custom ở excetion riêng và khó handle rollback transaction
+	=> tạo handle manual validate common
+- 10. Tạo service: Phân tách việc handle logic
+- 11. Tạo request: validate payload request
+- 12. Tạo Repositories : Tạo data layer phân tách việc thao tác với db
+- 13. Tạo resource (quy định response data trả về)
+	
