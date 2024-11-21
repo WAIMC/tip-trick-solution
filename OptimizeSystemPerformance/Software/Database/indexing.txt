@@ -1,0 +1,3 @@
+	+ View: Table ảo. Data dựa trên nhiều data của table khác nhau. Lợi ích là đơn giản hóa query, bảo mật, maintain, hiệu xuất tốt (vì thực hiện trực tiếp trên DB thay vì thực
+	thi từ nơi khác gửi query đến).
+	

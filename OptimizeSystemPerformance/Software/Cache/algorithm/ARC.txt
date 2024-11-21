@@ -1,0 +1,62 @@
+Adaptive Replacement Cache (ARC) là một thuật toán quản lý bộ nhớ đệm (cache) tiên tiến được thiết kế để thay thế dữ liệu hiệu
+quả trong bộ nhớ cache. Nó được phát triển bởi IBM và nổi bật với khả năng thích nghi với các kiểu truy cập dữ liệu khác nhau,
+kết hợp tốt giữa hiệu suất của cả Least Recently Used (LRU) và Least Frequently Used (LFU).
+
++-*/
+
+1. Mục Tiêu của ARC
+  ARC được thiết kế để:
+  - Thích nghi với các kiểu truy cập dữ liệu thay đổi (truy cập ngẫu nhiên hoặc tuần tự).
+  - Tối ưu hóa hiệu suất cache bằng cách cân bằng giữa việc lưu trữ dữ liệu mới được truy cập (gần đây) và
+  dữ liệu thường xuyên được truy cập.
+  - Tránh các vấn đề phổ biến của LRU và LFU, chẳng hạn như:
+  - LRU: Hoạt động kém khi có truy cập tuần tự lớn.
+  - LFU: Không thích nghi nhanh với các thay đổi trong kiểu truy cập dữ liệu.
+
+2. Nguyên Tắc Hoạt Động
+  ARC duy trì hai danh sách chính:
+  T1 (recent): Chứa các đối tượng mới được truy cập.
+  T2 (frequent): Chứa các đối tượng được truy cập thường xuyên.
+
+  Đồng thời, ARC cũng duy trì hai danh sách ma trận ẩn:
+  B1: Ghi nhớ các đối tượng đã bị loại khỏi T1.
+  B2: Ghi nhớ các đối tượng đã bị loại khỏi T2.
+
+  Các bước hoạt động:
+  - Theo dõi các kiểu truy cập:
+    + Nếu một đối tượng xuất hiện lại trong T1 hoặc B1, điều này gợi ý rằng dữ liệu gần đây đang có lợi ích cao.
+    + Nếu một đối tượng xuất hiện lại trong T2 hoặc B2, điều này cho thấy dữ liệu truy cập thường xuyên cần được ưu tiên.
+  - Điều chỉnh kích thước động: ARC liên tục điều chỉnh kích thước của T1 và T2 dựa trên tỷ lệ giữa các lần truy cập vào B1 và B2,
+  để đảm bảo tối ưu hóa hiệu suất.
+  - Thay thế thông minh: ARC thay thế các đối tượng cũ trong danh sách T1 hoặc T2 dựa trên dữ liệu theo dõi và phân tích từ B1 và B2.
+
+3. Lợi Ích của ARC
+  - Tự động thích nghi: ARC không cần cấu hình thủ công để tối ưu hóa hiệu suất, mà tự động điều chỉnh theo kiểu truy cập dữ liệu.
+  - Hiệu quả trong nhiều trường hợp:
+    + Tốt với truy cập tuần tự (vượt trội hơn LRU).
+    + Tốt với truy cập ngẫu nhiên hoặc lặp lại (vượt trội hơn LFU).
+  - Tăng hiệu suất: Giảm thiểu tỷ lệ "cache miss" nhờ cơ chế theo dõi và điều chỉnh động.
+  - Khả năng quản lý bộ nhớ hiệu quả: ARC sử dụng bộ nhớ cache một cách hiệu quả hơn so với các thuật toán truyền thống.
+
+4. Nhược Điểm của ARC
+  - Phức tạp hơn các thuật toán đơn giản: ARC yêu cầu nhiều cấu trúc dữ liệu và xử lý hơn, dẫn đến chi phí tính toán cao hơn so với 
+  LRU hoặc LFU.
+  - Không phù hợp với mọi trường hợp: Trong một số tình huống truy cập rất đơn giản, các thuật toán cơ bản như LRU có thể đủ tốt và 
+  dễ triển khai hơn.
+
+5. Ứng Dụng của ARC
+  - Hệ thống lưu trữ: Sử dụng trong các hệ thống quản lý tệp hoặc cơ sở dữ liệu để quản lý cache hiệu quả hơn,
+  chẳng hạn như ZFS (hệ thống tệp của Sun Microsystems).
+  - Quản lý bộ nhớ trong hệ điều hành: Tối ưu hóa việc thay thế trang trong bộ nhớ ảo.
+  - Ứng dụng web hoặc API: Cải thiện hiệu suất của hệ thống cache trong các dịch vụ lớn cần xử lý lượng dữ liệu lớn và đa dạng.
+
+6. So Sánh với Các Thuật Toán Khác
+  LRU
+    Ưu: Đơn giản, dễ triển khai
+    Nhược:	Hoạt động kém khi truy cập tuần tự
+  LFU
+    Ưu: Tốt với dữ liệu lặp lại
+    Nhược:	Không thích nghi nhanh với kiểu truy cập thay đổi
+  ARC
+    Ưu: Tự động thích nghi, hiệu quả với nhiều kiểu dữ liệu	
+    Nhược: Phức tạp, chi phí tính toán cao hơn

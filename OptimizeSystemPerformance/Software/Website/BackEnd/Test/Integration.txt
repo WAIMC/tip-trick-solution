@@ -1,0 +1,86 @@
+************* Integration Test (Kiểm thử tích hợp) là một loại kiểm thử phần mềm được thực hiện để kiểm tra sự tương tác giữa các module,
+thành phần, hoặc hệ thống khác nhau. Mục tiêu chính của kiểm thử tích hợp là đảm bảo rằng các phần này hoạt động chính xác khi kết hợp 
+với nhau.
+
+
+************* Mục đích của Integration Test
++ Kiểm tra tích hợp: Đảm bảo các module hoặc thành phần hoạt động đúng khi được tích hợp.
++ Phát hiện lỗi giao tiếp: Phát hiện lỗi trong quá trình trao đổi dữ liệu giữa các module hoặc hệ thống (API, cơ sở dữ liệu, giao diện).
++ Tăng cường chất lượng: Xác minh rằng hệ thống hoạt động như mong đợi khi các thành phần được kết hợp.
++ Chuẩn bị cho kiểm thử hệ thống: Là bước trung gian trước khi chuyển sang kiểm thử toàn bộ hệ thống.
++ Phát hiện các vấn đề về hiệu suất: Đánh giá hiệu suất của hệ thống khi các mô-đun hoạt động cùng nhau.
++ Phát hiện lỗi sớm: Các lỗi được phát hiện và sửa chữa sớm hơn, giúp giảm chi phí sửa chữa sau này.
++ Tăng hiệu quả làm việc: Tự động hóa các tác vụ kiểm thử giúp tiết kiệm thời gian và công sức.
+
+
+
+
+
+************* Xây dựng kịch bản integration test
+  + Nghiên cứu hệ Thống
+    - Xác định phạm vi: Xác định khu vực cần test như back-end, front-end, database, Microservice, bên thứ ba,...
+    - Phân tích nghiệp vụ: Đọc yêu cầu dự án, tài liệu thiết kế, sơ đồ, lược đồ, chức năng và phi chức năng của hệ Thống
+    - Xác định các module: Xác định các mối liên kết giữa các thành phần. Từ đó phần chia gom nhóm thành các module riêng, với mỗi module
+    chứa các thành phần có liên kết với nhau về nghiệp vụ và chức năng. Module đó độc lập với module khác cùng cấp và có thể là thuộc 
+    module khác hoặc chứa module khác
+    Ví dụ: 
+      * Tính năng xem, thêm, sửa, xóa product thì gom chung module là product
+      * Module product và category cùng cấp với nhau và cùng thuộc module feature, nên module feature có module con là category và product
+      * Module feature, policy, permission, account cùng cấp và cùng thuộc module admin
+  + Xác định các trường hợp có thể có khi hệ Thống hoạt động
+    - Liệt kê các hành động: Xác định và liệt kê tất cả các hành động có thể có cho từng module
+    - Lập danh sách các kịch bản: Xác định các luồng đi có thể có từ đó sắp xếp các hành động theo thứ tự (case bình thường), ngoài ra
+    xây dựng các kịch bản ngoại lệ (mất mạng, bật tắt browser, crud các dữ liệu có liên kết với dữ liệu khác, fake token,...)
+      * Positive Tests (Luồng chính): Các module kết hợp với nhau mà không có lỗi
+      * Negative Tests (Luồng phụ): Data không hợp lệ, các module trả kết quả không hợp lệ
+      * Edge Cases (case ngoại lệ): Big data, ngắt kết nối, độ trễ cao,...
+  + Thiết kế trường hợp kiểm thử
+    - Chuẩn bị dữ liệu đầu vào: Chuẩn bị dữ liệu ban đầu để kiểm tra các trường hợp đã liệt kê như giá trị biên, case hợp lệ, case ko hợp lệ
+    - Dự đoán kết quả mong đợi: Dự đoán các kết quả kiểm thử và so sánh với kết quả thực tế. Nếu kết quả như nhau thì pass step này còn
+    nếu không thì cần phân tích lại
+    - Viết mô tả các bước kiểm thử: Mô tả lại mục đích, cách tiến hành, cách kiểm tra để có được kết quả
+  + Tiến hành kiểm thử
+    - Lựa chọn kỹ thuật kiểm thử: bigbang, black box, white box, top down, bottom up
+    - Lựa chọn công cụ kiểm thử: Postman, selenium, junit, nunit, testrail,...
+    - Môi trường kiểm thử: Mỗi lần test tạo 1 môi trường mới với data của kịch bản kiểm thử, để tránh ảnh hưởng đến hệ thống 
+    - Viết code cho công cụ test 
+    - Tích hợp CI/CD nếu cần
+  + Kết thúc kiểm thử
+    - Liệt kê: Lược đồ module và các mối liên hệ, kịch bản kiểm thử, tài liệu kiểm thử, kết quả kiểm thử
+    - Bàn giao/báo cáo: Kêt quả kiểm thử, các lỗi phát sinh đã được phân nhóm mức độ ưu tiên, tài liệu kỹ thuật
+
+
+**** Test integration with postman
++ Vấn đề: Khi 1 hệ thống đã hoàn thiện, cần có phương án kiểm tra tất cả các thành phần trong hệ thống cùng lúc, mục đích để kiểm tra xem
+  - Chúng làm việc với nhau thế nào ?
+  - Có đáp ứng kỳ vọng ban đầu của 1 hệ thống không ?
+  - Làm thế nào để kiểm tra 1 cách nhanh chóng ?
+  - Kiểm tra 1 cách tự động ?
+
++ Giải pháp: Xác định đây là tiêu chí thực hiện kiểm thử tích hợp (integration test), kịch bản là Positive Tests (Luồng chính),
+kỹ thuật lựa chọn là hybird, hình thức kiểm thử sẽ là automation test để kiểm tra 1 cách tự động và nhanh chóng, sử dụng tool hoặc app để 
+kiểm tra đồng loạt và ghi nhận tất cả kết quả 
+
++ Cách tiến hành:
+  - Cài đặt app postman và đăng ký tài khoản
+  - Tạo 1 workspace riêng cho hệ thống để tiện quản lý
+  - Tạo collections riêng để test flow api
+  - Từ lược đồ module, tạo folder tương ứng với từng module
+  VD: 
+    * module product -> tạo folder product
+    * module category và product cùng cấp -> tạo folder category và product cùng cấp
+    * Module category và product thuộc module feature -> tạo folder feature chứa folder category và product
+  - Tạo request tương ứng với từng module vd: tạo request xem, thêm, sửa, xóa trong folder product
+  - Vì postman sẽ chạy từ theo luồng từ trên xuống dưới, nên sắp xếp module đúng theo thứ tự
+  VD: cần đăng ký account trước khi login -> sắp xếp register lên trên login.
+  test request xóa product -> sắp xếp request xóa product sau request xem, thêm, sửa, và sau các module khác nếu liên kết 
+  - Mỗi request edit method http, URL, params or body, header tương Ứng
+  - Mỗi request viết script trong mục Script/pre-request hoặc post-request nếu cần
+    * Pre-request: Tiền xử lý vd: Cần có product trước khi tạo order -> check tồn tại get product thì mới tiếp tục xử lý request create
+    order, nếu không thì next request tiếp theo hoặc kết thúc flow
+    * Post-request: Hậu xử lý VD: request api thành công -> check response trả về thì kiểm tra kết quả mong đợi, có code là 200 không?
+    kiểm tra key và data type response trả về có khớp mong đợi không? set global variable cho request khác dùng nếu cần
+  - Tạo Envirements: Tạo bộ global variable cho collection có thể trao đổi dữ liệu
+  VD:  tất cả các request đều dùng chung 1 url -> tạo variable url host và set value, khi thêm sửa xóa sẽ update toàn bộ 
+  - Khi run integration test thì run toàn bộ collections cần test
+  - khi muôn run ở hệ thống khác hoặc CI/CD thì có thể export collection và env ra, import hệ thống cần test và chạy bằng newman

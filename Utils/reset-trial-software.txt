@@ -1,0 +1,36 @@
+##########  Reset software trial
+B1: After the trial period ends, uninstall the software.
+
+B2: Open RUN (Press Windows + R), fill “Regedit” into search box when it opening, after press Enter.
+
+B3: After, cửa sổ trình chỉnh sửa registry sẽ xuất hiện. Tại đây, bạn phải điều hướng đến HKEY_LOCAL_MACHINE SOFTWARE, theo sau là 
+tên của phần mềm có thời gian dùng thử mà bạn muốn xóa. Bạn sẽ tìm thấy tất cả những điều này trong bảng điều khiển bên trái.
+
+B4: Nếu một tên key đề cập đến phần mềm được tìm thấy, hãy xóa nó.
+
+B5: Khi bạn đã hoàn thành việc này, hãy điều hướng đến HKEY_CURRENT_USER software theo sau là tên phần mềm.
+Lặp lại bước 4 và đóng cửa sổ trình chỉnh sửa registry khi bạn đã hoàn tất.
+
+B6: Bây giờ, mở lại RUN, nhập %temp% vào hộp tìm kiếm và nhấn Enter.
+
+B7: Một thư mục sẽ mở ra nơi bạn phải xóa tất cả các file tạm thời.
+Đừng lo lắng, dữ liệu này không cần thiết cho hệ điều hành của bạn. Cuối cùng, đóng cửa sổ.
+
+B8: Sau đó, chuyển đến ổ C và mở “User” bằng useername của bạn. Bên trong là thư mục “AppData” và khi bạn truy cập vào nó,
+bạn sẽ tìm thấy thêm ba thư mục “Local”, “LocalLow” và “Roaming”. Mở từng cái và nếu bạn tìm thấy bất kỳ thư mục hoặc thứ gì đó
+có tên của phần mềm, hãy xóa nó.
+
+B9: Restart your system
+
+B10: Repeat the process every time the trial expires.
+
+
+########## Turn off trial countdown
+
+########## Block website access using host file
+vì các phần mềm sẽ yêu cầu login để dùng thử, khi hết hạn sẽ dùng account đã login vào app để connect lên website chính chủ check
+thời gian dùng thử -> chặn truy cập của máy đến website
+
+Step 1: Open file C:\Windows\System32\drivers\etc\host
+Step 2: Thêm "127.0.0.1 hostting.com.vn" vào file để chặn truy cập
+Step 3: Save lại

@@ -38,7 +38,7 @@ năng như dùng seesion
     * Return string encode and encrypt : header . payload . signature
     * Việc server sẽ trả về 2 token:
   	2.2.1/ Access token: dùng để xác thực, set time life ngắn, trả về payload body response, (là string jwt config secrect key riêng)
-	  2.2.2/ Refresh token: dùng để call api lấy token mới khi token cũ hết hạn, trả về cookie httponly same site (là string jwt config sercet key riêng)
+	2.2.2/ Refresh token: dùng để call api lấy token mới khi token cũ hết hạn, trả về cookie httponly same site (là string jwt config sercet key riêng)
 - 3/ Client get token from response and store in browser
 	+ Access token: lấy access token từ body response, sau đó lưu trong local store hoặc session store
 	+ Refresh token: lưu trong httponly cookie, same site, secure

@@ -1,0 +1,54 @@
+LRU là một thuật toán thay thế trong hệ thống quản lý bộ nhớ đệm (cache) nhằm xóa bỏ các dữ liệu được truy cập cũ nhất khi cache đầy.
+khi bộ nhớ cache đầy và cần thêm mới dữ liệu, phần tử truy cập cũ nhất sẽ bị xóa khỏi bộ nhớ cache.
+
++-*/
+
+Cách Hoạt Động
+  1. Truy cập dữ liệu:
+  + Khi dữ liệu đã tồn tại trong cache, được di chuyển lên đầu danh sách
+  + Nếu dữ liệu không có trong cache (cache miss), hệ thống xủ lý lấy dữ liệu từ nguồn gốc, lưu vào cache, đưa lên đầu danh sách.
+
+  2. Loại bỏ dữ liệu:
+  + Nếu cache đầy, phần tử truy cập cũ nhất sẽ bị xóa để nhường chỗ cho dữ liệu mới.
+
+  3. Cập nhật cache:
+  + Danh sách dư liệu trong cache sẽ được cập nhật mỗi khi có một phần tử được truy cập lại, để đảm bảo thứ tự ưu tiên.
+
+Triển Khai LRU: Có nhiều cách để triển khai thuật toán LRU. Hai phương pháp phổ biến nhất là:
+  A. Danh sách liên kết kép (Doubly Linked List) kết hợp với Hash Map
+  + Hash Map: Lưu các cặp giá trị (key, node) để truy cập nhanh. (O(1)).
+  + Doubly Linked List: Dùng để theo dõi thứ tự các phần tử. Node mới nhất sẽ nằm ở đầu danh sách,
+  và node ít được truy cập nhất nằm ở cuối.
+    - Khi một phần tử được truy cập, nó được di chuyển lên đầu danh sách.
+    - Khi cần loại bỏ, phần tử ở cuối danh sách sẽ bị xóa.
+  + Ưu điểm:
+    + Tra cứu và cập nhật trong O(1).
+    + Hiệu quả và phổ biến trong thực tế.
+    + Cấu trúc dữ liệu: Hash map, double linked List
+
+  B. Array hoặc list
+  + Lưu trữ các phần tử trong một danh sách hoặc mảng, và sắp xếp lại thứ tự mỗi khi có truy cập.
+  + Khi cần loại bỏ, phần tử ở cuối danh sách (ít sử dụng nhất) sẽ bị loại bỏ.
+  + Nhược điểm: Chi phí cao hơn (O(n)) khi phải di chuyển và sắp xếp phần tử.
+
+Các hình thức quản lý cache: Hầu như đều hỗ trợ thuật toán này
+  + In-memory: redis chọn thuật toán và cấu hình
+  + Browser: Trình duyệt có cơ chế để quản lý, dùng thuật toán overide lại ko khả thi. Hãy dùng cache mặc định trên browser,
+  Nếu muốn có thể dùng JS tự quản lý cache
+  + ...
+
+Ứng dụng
+  + Operation system: Giảm thiểu lỗi page
+  + Database: Lưu kết quả truy vấn
+  + Text editor or IDE: lưu trữ file hoặc code thường dùng gần đây
+  + Network: Đếm số lượng truy cập
+
+Ưu điểm:
+  + Dễ hiểu và hiệu quả
+  + Hiệu suất cao với cache nhỏ
+  + Tự động loại bỏ phần tử ít cần thiết	
+
+Nhược điểm:
+  + Có thể tốn tài nguyên nếu triển khai không tối ưu
+  + Không tối ưu với truy cập tuần tự dài
+  + Có thể bị hạn chế với dung lượng cache nhỏ

@@ -1,0 +1,144 @@
+Caching là một kỹ thuật tối ưu hóa hiệu suất hệ thống. Bằng cách lưu trữ tạm thời các dữ liệu đã được tính toán và truy cập
+thường xuyên, vào bộ nhớ tốc độ cao để giảm thời gian truy xuất và giảm tải tài nguyên xử lý của hệ thống cho những lần sau.
+Thay vì phải truy xuất dữ liệu từ nguồn gốc và xử lý tính toán lại mỗi lần ko cần thiết, hệ thống có thể lấy dữ liệu tính toán
+trước đó từ bộ nhớ đệm (cache).
+
++-*/
+
++ Tại sao cần caching?
+  - Tăng tốc độ truy xuất: Giảm thiểu thời gian chờ đợi khi truy cập dữ liệu.
+  - Giảm tải cho hệ thống: Giảm số lượng yêu cầu đến nguồn dữ liệu gốc.
+  - Cải thiện trải nghiệm người dùng: Tăng tốc độ tải trang web, ứng dụng, giảm độ trễ.
+
+
++ Khi Nào Sử Dụng Caching
+  - Dữ liệu ít thay đổi và thường xuyên được truy cập.
+  - Tăng hiệu suất cho các tài nguyên tốn kém (truy vấn phức tạp, API bên thứ ba).
+  - Cần giảm độ trễ trong giao tiếp giữa client và server.
+
+
++ Nguyên lý hoạt động của caching:
+  - Kiểm tra dữ liệu: Khi có một yêu cầu đến, hệ thống sẽ kiểm tra xem dữ liệu có tồn tại trong cache hay không.
+  - Lấy dữ liệu: Nếu dữ liệu có trong cache, trả về dữ liệu đó. Nếu không thì lưu trữ dữ liệu đó vào cache trước khi trả về.
+  - Quản lý dữ liệu: Tùy theo chiến lược. Thêm dữ liệu khi cần. Cập nhật khi cần có thay đổi. Xóa dữ liệu khi hết hạn, đầy bộ nhớ hoặc
+  xóa dữ liệu khi có thay đổi để truy cập vào nguồn lấy dữ liệu mới.
+
+
++************* Chiến lược cache (strategy): Xác định các yếu tố trước khi cache
+  - Tính toán kích thước cache lưu trữ và xử lý:
+    * Dự toán lượng dữ liệu cần cache: Căn cứ vào số lượng user, tần suất truy cập, kích thước trung bình data
+    * Xác định tỷ lệ hit rate mong muốn: Tỷ lệ hit rate càng cao thì kích thước cache cần càng lớn.
+    * Cân nhắc chi phí: Kích thước cache lớn hơn sẽ tiêu tốn nhiều tài nguyên hơn.
+  - Xác định loại dữ liệu cần cache:
+    * Dữ liệu tĩnh: Dữ liệu ít thay đổi hoặc không thay đổi, như danh sách sản phẩm, thông tin người dùng cố định. Hình ảnh, CSS, JS.
+    * Dữ liệu động: Dữ liệu thay đổi thường xuyên, tính toán phức tạp, như kết quả tìm kiếm, thông tin tài khoản người dùng.
+    * Dữ liệu có thời hạn: Dữ liệu chỉ hợp lệ trong một khoảng thời gian nhất định, như giá cổ phiếu thực thời.
+  - Chọn cấu trúc dữ liệu phù hợp:
+    * String: Khi cần lưu các giá trị đơn giản.
+    * Hash: Lưu dữ liệu dạng key-value phức tạp (ví dụ: thông tin người dùng).
+    * List: Lưu danh sách tuần tự như các bài viết.
+    * Set: Lưu dữ liệu không trùng lặp.
+    * Sorted Set: Khi cần lưu dữ liệu có thứ tự (như leaderboard).
+  - Yêu cầu về hiệu xuất (con số cụ thể):
+    * Tần suất truy cập: Xác định dữ liệu nào được truy cập nhiều nhất (hot data). Chỉ cache dữ liệu này để tối ưu hiệu suất.
+    * Thời gian truy xuất: Cache phải đảm bảo thời gian truy xuất cực kỳ nhanh.
+    * Throughput: Khả năng xử lý đồng thời nhiều yêu cầu.
+    * Latency: Độ trễ thấp để đảm bảo trải nghiệm người dùng tốt.
+  - Yêu cầu về tính nhất quán dữ liệu:
+    * Tần suất thay đổi dữ liệu:
+      / Dữ liệu ít thay đổi (read-heavy): Có thể cache trong thời gian dài.
+      / Dữ liệu thay đổi thường xuyên (write-heavy): Cần sử dụng TTL (Time-to-Live) hoặc cơ chế invalidation.
+    * Chiến lược làm mới dữ liệu (Cache Invalidation):
+      / TTL: Xác định thời gian dữ liệu trong cache còn hiệu lực.
+      / Cache Busting: Làm mới dữ liệu khi dữ liệu nguồn thay đổi.
+      / Event-driven Cache Invalidation: Dữ liệu cache được cập nhật khi sự kiện xảy ra (ví dụ: thay đổi trong cơ sở dữ liệu).
+    * Strong consistency: Dữ liệu trong cache luôn đồng bộ với dữ liệu gốc.
+    * Eventual consistency: Dữ liệu trong cache có thể không đồng bộ ngay lập tức nhưng sẽ được đồng bộ hóa sau một thời gian.
+    * Consistency level: Mức độ nhất quán cần thiết tùy thuộc vào yêu cầu của ứng dụng.
+  - Chiến lược eviction: Quy tắc loại bỏ dữ liệu khi cache đầy.
+  - Thủ tục cập nhật cache: Cách thức cập nhật dữ liệu khi có thay đổi ở nguồn.
+  - Quản lý cache: Theo dõi hiệu suất cache, cấu hình lại nếu cần.
+  - Tính khả dụng: Đảm bảo cache luôn hoạt động ổn định.
+
+
++ Thuật toán đọc/thêm dữ liệu cache (Write Policies): Quyết định thêm cache khi nào và như thế nào
+  - Caching Policies (Chính sách lưu trữ)
+    * Time-To-Live (TTL): Thiết lập thời gian mà dữ liệu trong cache sẽ hợp lệ trước khi bị xóa hoặc làm mới.
+    * Stale-While-Revalidate: Sử dụng dữ liệu cũ trong cache trong khi tải lại dữ liệu mới.
+    * Cache Invalidation: Xóa hoặc làm mới dữ liệu cache khi có thay đổi, đảm bảo tính nhất quán.
+  - Write  
+    * Write-Through: Dữ liệu được ghi đồng thời vào cache và nguồn. Đảm bảo cache luôn đồng bộ.
+    * Write-Back: Dữ liệu được ghi vào cache trước, sau đó cập nhật về gốc sau một khoảng thời gian. Rủi ro mất dữ liệu khi hệ 
+    thống bị sự cố chưa cập nhật ở gốc.
+    * Write-around: cache có khả năng ghi lại các hoạt động trực tiếp vào bộ nhớ, hoàn toàn bỏ qua cache
+  - Read
+    * Read-Through Cache: Ứng dụng không truy cập trực tiếp vào nguồn dữ liệu gốc, mà chỉ qua cache. Nếu cache không có dữ liệu 
+    (cache miss), nó sẽ tự động lấy dữ liệu từ nguồn gốc và lưu vào cache.
+  - Các kỹ thuật tương tác với đọc cache tăng hiệu suất:
+    * Lazy Loading: Cache chỉ lưu trữ dữ liệu khi có yêu cầu. Điều này giúp giảm lượng dữ liệu lưu trữ không cần thiết nhưng có thể làm tăng
+    độ trễ trong lần truy cập đầu tiên.
+    * Preloading: Dữ liệu được tải vào cache trước khi có yêu cầu. Kỹ thuật này thường được sử dụng khi có dự đoán chính xác
+    về dữ liệu sẽ được truy cập.
+
+
++ Thuật toán xóa cache (Cache Replacement Policies): Khi bộ nhớ cache đầy, cần thêm dữ liệu mới để sử dụng do đó cần xóa cache ít 
+quan trọng hơn, mục đích tận dụng lợi ích của cache trong phạm vi giới hạn của hệ thống. Dưới đây là 1 số thuật toán để xóa cache
+  - Least Recently Used (LRU): Xóa bỏ các dữ liệu được truy cập cũ nhất.
+  - Least Frequently Used (LFU): Xóa bỏ các dữ liệu ít được sử dụng nhất theo tần suất.
+  - Most Recently Used (MRU): Xóa bỏ dữ liệu được thêm gần nhất. Áp dụng khi dữ liệu cũ truy cập nhiều hơn dữ liệu mới.
+  - First In First Out (FIFO): Xóa bỏ các dữ liệu được thêm vào đầu tiên. Áp dụng khi dữ liệu mới truy cập nhiều hơn dữ liệu cũ
+  - Random Replacement: Loại bỏ ngẫu nhiên, ít dùng
+  - Last in first out (LIFO)
+  - Adaptive Replacement Cache (ARC): kết hợp của LRU và LFU,
+  - Multi queue (MQ)
+
+
++ Công cụ hỗ trợ:
+  - In-Memory Cache: Redis, Memcached.
+  - CDN: Cloudflare, Akamai, AWS CloudFront.
+  - Reverse Proxy Cache: NGINX, Varnish.
+  - Database Cache: MySQL Query Cache, PostgreSQL Materialized Views.
+  - Library/Framework Cache: Laravel Cache, Django Cache, Spring Cache.
+
+
++ Ưu điểm của caching:
+  - Hiệu suất cao: Tăng tốc độ truy cập dữ liệu nhanh hơn so với lấy dữ liệu nguồn.
+  - Tăng khả năng chịu tải: Giảm số lượng xử lý làm hệ thống xử lý nhanh hơn khiến hệ thống có thể xử lý nhiều hơn.
+  - Khả năng mở rộng: Có thể dễ dàng mở rộng hệ thống cache để đáp ứng nhu cầu tăng trưởng.
+  - Cải thiện trải nghiệm người dùng: Giảm thời gian phản hồi, đặc biệt quan trọng với ứng dụng thời gian thực.
+  - Giảm chi phí: Xử lý ít hơn nhanh hơn làm tiết kiệm chi phí vận hành
+
+
++ Nhược điểm của caching:
+  - Tính nhất quán: Dữ liệu trong cache có thể lỗi thời nếu không quản lý tốt việc làm mới.
+  - Độ phức tạp: Quản lý cache đòi hỏi kiến thức chuyên môn, cấu hình phức và cần giám sát tốt để tránh lỗi.
+  - Quản lý bộ nhớ: Cache chiếm tài nguyên (RAM, ổ đĩa), cần kiến thức để quản lý hiệu quả tránh gây ra vấn đề với hệ thống lớn.
+  - Cache Miss: Truy cập lần đầu vào dữ liệu chưa có trong cache có thể chậm.
+  - Rủi ro bảo mật: Cần có chiến thuật quản lý dữ liệu lưu trữ các thông tin nhạy cảm.
+
+
++ Các loại cache
+  - Operation system: Ram
+  - Content Delivery Network (CDN): Mạng phân phối nội dung, lưu trữ dữ liệu trên nhiều máy chủ ở các vị trí địa lý khác nhau để
+  giảm thời gian truyền tải.
+  - Web cache: Lưu trữ các trang web tĩnh, hình ảnh, CSS, JavaScript để giảm thiểu thời gian tải lại trang.
+    * Client-side: Lưu trữ HTML, CSS, JavaScript, image,... vào browser, Progressive Web App (PWA) Sử dụng Service Workers để cache tài
+    nguyên và dữ liệu nhằm hỗ trợ offline hoặc cải thiện hiệu suất.
+    Các browser đều có cơ chế phức tạp và hiệu quả để quản lý cache, tích hợp sâu vào lõi, nên không chọn lựa thuật toán overide lại.
+    * Server-side: In-memory Engine sử dụng redis hoặc memcache, file cache lưu trong ổ đĩa server
+  - Application:
+  - Mobile:
+  - Proxy: Reverse Proxy Cache: Proxy server (như NGINX, Varnish) lưu trữ dữ liệu để giảm tải cho backend server. 
+  - Database cache: Lưu trữ kết quả các truy vấn cơ sở dữ liệu thường xuyên (query, Materialized) để giảm tải cho cơ sở dữ liệu.
+  - Object cache: Lưu trữ các đối tượng được tạo sẵn để tránh phải tạo lại chúng mỗi lần.
+
+
++ Ứng dụng của caching:
+  - Web server: Tăng tốc độ tải trang web.
+  - Ứng dụng di động: Giảm thời gian tải dữ liệu.
+  - Trò chơi trực tuyến: Giảm độ trễ.
+  - Mạng xã hội: Tăng tốc độ hiển thị nội dung.
+  - API
+  - Cơ sở dữ liệu
+  - Hệ thống phân tán
+  - Các ứng dụng cần sử lý dữ liệu nhanh

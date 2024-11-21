@@ -1,0 +1,79 @@
+***************** Tối ưu hiệu suất hệ Thống
+Tối ưu hóa hiệu suất hệ thống là một quá trình liên tục nhằm nâng cao tốc độ, khả năng đáp ứng và hiệu quả sử dụng tài nguyên
+của hệ thống. Việc thực hiện các kỹ thuật này giúp cải thiện trải nghiệm người dùng, giảm thiểu chi phí vận hành và tăng cường
+độ ổn định của hệ thống.
+
+*****************Các Kỹ Thuật Tối Ưu Hiệu Suất Hệ Thống +-*/
++ Hardware (phần cứng)
+  - CPU
+  - RAM
+  - GPU
+  - Disk (SSD or HDD)
+  - Setting bios
+  - server management
+    * temperature
+    *....
+
++ Operating system (hệ điều hành)
+  ....
+
++ Software (phần mềm)
+  - Ứng dụng khởi động
+  - web server: ip, port,...
+  - Công nghệ (ngôn ngữ lập trình, thư viện, package,...)
+  - Database
+    * Thiết kế kiến trúc
+    * data type
+    * Tối ưu truy vấn
+    * Phân mảnh table
+    * index
+    * cache
+  - Network
+    * Két nối mạng: internet, lan, wan, giao thức,...
+    * VPN
+    * firewall
+    * proxy
+    * Persistent Connections
+    * GZIP Compression
+    * Limit rating
+    * Stream
+  - Source code (website, app, tool, ...)
+    * Minify code (webpack, gulp)
+    * Combine files
+    * Code Profiling
+    * Codding convention
+    * Optimize code
+    * Async xử lý tác vụ khác mà ko cần đợi, hoặc phải đợi xong
+    * Concurrency xử lý 1 lần nhiều tác vụ
+    * Data structure
+    * Algorithm
+    * 
+  - website
+    * media (image, video, sound,...)
+    * Back-end
+    * Front-end
+      / lazy loading
+      / rerender-blocking
+      /
+    * browser
+  - Cache
+    * Algorithm
+    * Distributed cache
+    * In-memory cache
+    * Chiến lược cache
+      / LRU Cache (Least Recent Used)
+      / FIFO Cache (First In First Out)
+  - testing
+  - Monitoring
+  - Profiling
+  - Logging
+  - Microservice
+    * Load balancer
+    * Scale dọc, ngang
+    * Asynchronous Processing
+    * Queue System (rabbitMQ, redis queue) xử lý công việc lâu dài
+    * VPS
+    * Cloud
+    *
+  - Handle error system
+  - 
