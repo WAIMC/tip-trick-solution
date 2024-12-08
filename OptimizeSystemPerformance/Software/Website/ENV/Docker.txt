@@ -109,3 +109,59 @@ các ứng dụng phức tạp với nhiều dịch vụ, chẳng hạn như ứ
 + Mỗi khi thêm/sửa/xóa Dockerfile thì chạy lại container
   docker-compose build app
 + Dữ liệu MySQL or postgresl sẽ được lưu trong volume dbdata để tránh mất mát khi khởi động lại container.
+
+
+
+
+
+
+
+
+
+
+
+
+*********** demo
++ Chuẩn bị dockerfile: tạo hay lấy đâu đó, mở terminal vào đúng path đang đứng
++ Build image từ Dockerfile
+  Chạy command line: docker build -t my-node-app .
+  Trong đó : 
+    -t my-node-app: Đặt tên (tag) cho image.
+    .: Đường dẫn đến Dockerfile (thư mục hiện tại).
++ Build container từ image
+  Chạy command line: docker run -d -p 3000:3000 --name my-node-app my-node-app
+  Trong đó: 
+    -d: Chạy container ở chế độ nền (detached).
+    -p 3000:3000: Máp cổng máy chủ (3000) với cổng trong container (3000).
+    --name my-node-app: Đặt tên cho container.
++ Nếu có nhiều phần mềm cần cài đặt => nhiều dockerfile, cần docker compose (file dockercompose.yml) thì 
+chạy command line: docker-compose up -d
+
+
+****** Nếu clone source có sẵn các dockerfile và dockercompose.yml rồi
++ Download docker nếu chưa có
++ Tìm hiểu cấu trúc file
+  - Dockerfile: Xem từng dịch vụ được định nghĩa như thế nào.
+  - docker-compose.yml: Xác định các dịch vụ, cổng, volume, và phụ thuộc giữa chúng.
++ Build project
+  - Nếu chỉ dùng dockerfile
+    * Vào từng folder tương ứng chứa dockerfile để build image:
+      / Chạy lệnh: docker build -t <image_name> .
+      / Trong đó: <image_name> là tên image tự định nghĩa, . là path đến dockerfile hiện tại
+  - Nếu dùng docker compose
+    * Vào folder chứa file dockercompose.yml build toàn bộ bằng lệnh: docker-compose build
+    * Nó sẽ tự động build các dockerfile đc config
++ Run project
+  - Nếu chỉ dùng dockerfile:
+    * chạy lệnh: docker run -d --name <container_name> -p <host_port>:<container_port> <image_name>
+    * -d: Chạy dưới dạng nền.
+    * --name: Đặt tên cho container.
+    * -p: Máp cổng trên máy host và container.
+    EG: 
+    docker run -d --name my-app -p 3000:3000 my-app
+    docker run -d --name my-db -p 27017:27017 my-db
+  - Nếu dùng docker compose
+    * Chạy lệnh: docker-compose up -d
++ Stop project
+  - Nếu chỉ dùng dockerfile: docker stop <container_name>
+  - Nếu dùng compose docker: docker-compose down
