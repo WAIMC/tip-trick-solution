@@ -1,0 +1,3 @@
+lên schedule tổng quan về phần tích nguồn lưc thực hiện và các
+yêu cầu dự án. Từ đó đánh giá có thể thực hiện nó trong thời gian
+bao lâu. Tính toán chi phí để quyết định 'lời làm lỗ thôi'

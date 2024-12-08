@@ -1,0 +1,1 @@
+bản nâng cấp của ERD level 1, lúc này sẽ có đầy đủ column của table

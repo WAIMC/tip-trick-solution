@@ -1,10 +1,10 @@
-##### Dynamic website mutiple language
+##### Dynamic website multiple language
 - Solution
-	+ Use mutiple file config define variable common with same key but the value is value has translator for fer file
+	+ Use multiple file config define variable common with same key but the value is value has translator for fer file
 	+ Design DB store data for multiple language, create new table with all column is common and multiple sub table with
 	columns need value translator (eg: fields price, discount, phone number,... is common and fields name_product, ... need translator)
-	+ Use api the third to transator payload before to CRUD data for per table language eg: google translate api
-	+ when use the third api to translator payload before update need handle when change data choose would use tranlator update other language
+	+ Use api the third to transactor payload before to CRUD data for per table language eg: google translate api
+	+ when use the third api to translator payload before update need handle when change data choose would use translator update other language
 	+ When admin create/update/delete a field will create a record in table history
 	ex: 
 		* Create a record will make full data for per column for history
@@ -43,23 +43,34 @@
 		
 		sửa table t_api_feature column api_id, feature_id cho phép null -> khi insert table api hoặc feature sẽ trigger insert data vào table này với role root 
 
+##### Chức năng login, remember me, logout dùng session và cookie
+	+ Browser gửi thông tin login (username, pass, remember me) lên server
+	+ Server xác minh account (check tồn tại trong DB).
+		- Nếu fail thì throw về exception
+		- Nếu đúng: Tạo 1 session lưu trữ VD: id = unqID, user_id=1,.. vào (file, DB, cache,...)
+		và trả về response set cookie với value là session_id. Cả hai có cùng time life ngắn VD: 30p 
+			* Nếu có remember me: Thì tạo 1 uniqueID lưu trữ ở (file, DB, cache,...) và trả về response set cookie
+			có cùng time life vd:10 ngày
+	+ Mỗi request tiếp theo sẽ đính kèm 2 cookie session_id và remember token lên server
+	+ Server check cookie session_id có tồn tại session trong (file, DB, cache,...) hay không
+		- Nếu ko, thì check trong request có cookie remember me token không
+			* Nếu ko thì server throw exception, client redirect page login 
+			* Nếu Có remember token, check có hợp lệ hay không
+				/ ko thì server throw exception. Client redirect page login
+				/ Hợp lệ thì refresh lại thời gian remember token lưu trữ, tạo 1 session mới. Trả về client set cookie session_id mới và
+				remember token nhưng time life mới refresh 
+		- Nếu có thì tiếp tục xử lý
+	+ Khi session hết hạn. Lúc này session và cookie đã bị xóa, những request tiếp theo
+	client gủi sẽ không có cookie session_id hoặc server check không tồn tại session. Server sẽ check trong request gửi
+	lên có remember token hay không
+		- Không có remember token trong request thì throw exception. Client redirect qua page login
+		- Có remember token, check có hợp lệ hay không
+			* ko thì server throw exception. Client redirect page login
+			* Hợp lệ thì refresh lại thời gian remember token lưu trữ, tạo 1 session mới. Trả về client set cookie session_id mới và
+			remember token nhưng time life mới refresh 
+	+ Khi user client call api logout: server sẽ xóa lưu trữ session và remember token, trả về kết quả thành công.
+	Server trả về response set cookie với express trong quá khứ để làm cookie hết hạn và tự động xóa cookie ở phía client
 
-
-##### Function login use seesion và cookie
-	+ Step 1: Browser sent username and password to server via HTTP
-	+ Step 2: Server check is exist session, if not server create token unique and store to a file (path setting session.save_path in file php.ini)
-	+ Step 3: Server return browser a token (form cookie) create by this session
-	+ Step 4: Browser get cookie from header response and store in browser eg: cookie, local store,...
-	+ Step 5: Every next request, browser sent this cookie to server
-	+ Step 6: Server check cookie by session id, session store some info user (eg: id, email,...) -> server know who do this sent request
-
-
-
-##### Function remember login use session and cookie
-	+ Step 1: Browser sent username, pass and input remember me
-	+ Step 2: Server auth success, store a token to DB and return this token to browser store
-	+ Step 3: When session has been removed (set time session, cookie, check time activity, use js sent request remove session when close browser)
-	access to URL, use js auto check exist token remember if exist sent to server. After server check and return response
 
 ##### Redis: Tương tự như DB thông thường, nhưng lưu trữ dạng cache hay data memory (lưu bằng ram, mất data khi ngắt kết nối, sập server), lưu data mang giá trị tạm thời,
 không như DB thông thường lưu ở disk -> không mất data khi ngắt kết nối. Có khả năng truy xuất data nhanh. Lưu chữ data dạng key-value pair

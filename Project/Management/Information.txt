@@ -1,0 +1,7 @@
+- mô tả thông tin chi tiết
+	+ access link
+	+ account
+	+ note issue
+	+ link tham khảo
+	+ domain, hosting
+	+ email,..

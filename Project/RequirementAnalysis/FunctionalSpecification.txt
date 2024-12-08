@@ -1,0 +1,13 @@
+********************* Đặc tả chức năng
+- Từ bản phác thảo use case diagram, thì các thực thể đã được
+xác định và có những yêu cầu cho các chức năng ứng với từng
+thực thể
+- Phần này sẽ đi sâu hơn đó là bóc tách phân tích từng action và các case có thể
+xảy ra ứng với từng thực thể.
+  vd: Thực thể admin và action thêm category
+  -> Thêm những dữ liệu gì ?
+  -> Ý nghĩa mục đích của từng dữ liệu
+  -> Có lồng nhiều cấp hay không ? nếu có tối đa bao nhiêu cấp ?
+  -> ...
+- Phần này có thể khách hàng yêu cầu hoặc dựa vào yêu cầu chức năng tự define ra
+ và report báo khách confirm có làm hay không.

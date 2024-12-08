@@ -1,0 +1,80 @@
+##### Mô tả chung
+Session là một cơ chế trong lập trình web để lưu trữ thông tin về người dùng (user) trong một khoảng thời gian làm việc 
+(phiên làm việc). Thông tin này được lưu trữ trên server và thường được liên kết với người dùng thông qua một Session ID.
+
+##### Nguyên lý hoạt động trong php
++ khi tạo mới 1 session trong php:
+  - Dùng mặc định các tính năng Session trong php
+    * Mặc đinh, khi khởi động session_start() sẽ tự động kiểm tra lấy PHPSESSID trong cookie sau đó check coi có file session cùng tên
+    PHPSESSID không, nếu ko sẽ tạo mới 1 file session, với tên file là string uniqueID 32 kí tự, lưu trữ 
+    trong (path setting session.save_path trong file php.ini)
+    * Khi crud 1 session, thì sẽ tự động thay đổi dữ liệu trong file này. Dữ liệu session dạng key/value.
+    Trong file, nội dung dữ liệu lưu trữ là data đã đc chuyển đổi sang serialized
+    * Khi session start, các response trả về sẽ tự động set cookie là PHPSESSID
+    * Khi session start, nhận 1 request gửi đến đính kèm cookie là PHPSESSID, php sẽ tự động xác đinh request đó sẽ làm việc ứng với session
+    nào
+    * Cái duy nhất can thiệp là thay đổi dữ liệu trong session và setting các thành phần trong session như time, secure,...
+  - Tùy chỉnh tự xử lý session
+    * Tạo session và lưu trữ session trong folder/file, database, cache (redis, memcache).
+    Tạo unique id (dùng mấy function random unique) làm tên file (nếu lưu file), làm value cho column id
+    nếu lưu database, cache. Đồng thời, những data cần lưu trữ trong session thì tạo dạng object/array tiến
+    hành serialized trước khi lưu
+    * Trả response về client với value của cookie là unique id
+    * Mỗi lần client gửi request lên sẽ tự động đính kèm cookie
+    * Server kiểm tra cookie value xem có tồn tại file (nếu lưu file) or database ko, nếu có chích xuất unserialized data ra để Xác
+    định request đó của user nào
+
+##### Ứng dụng
++ Quản lý phiên làm việc (session management): Ghi nhớ trạng thái đăng nhập, giỏ hàng.
++ Cá nhân hóa nội dung: Lưu các tùy chọn của người dùng như sở thích hay lựa chọn của user khi duyệt web.
++ Theo dõi và phân tích: Hỗ trợ các công cụ theo dõi hoạt động của người dùng để phân tích hành vi đề xuất nội dung, quảng cáo.
+
+
+##### Các vấn đề và giải pháp khi sử dụng
++ Bảo mật
+  - Vấn đề:
+
+  - Giải pháp:
+    * Dùng HTTPS: Để trao đổi dữ liệu, bằng cách set cookie secure
+    * Dùng HTTP Only: Ko cho js truy cập cookie dưới client bằng cách set cookie http-only 
+
+
++  Hiệu năng
+  - Vấn đề: Có quá nhiều session khi lưu lượng user cao, hay lưu trữ nhiều seesion cho 1 user làm giảm hiệu năng
+  - Giải pháp:
+    * Lưu trữ những session và data session cần thiết
+    * Dùng kỹ thuật khác như JWT để login tránh lưu trữ
+    * Lưu trữ ở cache như memcache hay redis để truy xuất nhanh hơn so với lưu bằng file hay DB
+
++ Hết hạn session
+  + Vấn đề: Ảnh hưởng trải nghiệm user khi đang thao tác mà bị đá ra login do session hết hạn
+  + Giải pháp: 
+    * Thông báo cho user khi session sắp hết hạn
+    * Cho phép gia hạn session
+    * Chuyển qua dùng JWT, sử dụng cơ chế refresh token. Tự động làm mới token khi hết hạn
+
++ Quản lý truy Cập
+  * Vấn đề: Vì session được lưu trữ và server có thể quản lý do đó khi phát hiện truy cập khả khi có thể loại bỏ truy Cập
+  * Giải pháp: Server xóa session dẫn đến request khả nghi sẽ không được truy cập
+
+
+
+##### Ưu điểm
+- Dễ triển khai, hầu như mấy framework web hiện nay đều giúp bạn thực hiện session authentication một cách cực kỳ dễ dàng
+chỉ với vài dòng code 
+- Bảo mật thông tin người dùng. Như bạn thấy đấy, người dùng chỉ lưu một cái chuỗi ngẫu nhiên (session id) trên máy mình và
+gửi nó lên server qua mỗi request, nên mấy cái thông khác như username, password, ... không bị lộ ra ngoài 
+- Toàn quyền kiểm soát phiên làm việc của người dùng. Vì mọi thứ bạn lưu trữ ở server nên bạn có thể đăng xuất người dùng bất
+cứ khi nào bạn muốn bằng việc xóa session id của họ trong bộ nhớ lưu trữ phía server.    
+
+##### Nhược điểm
+- Việc toàn quyền kiểm soát vừa là ưu điểm cũng vừa là nhược điểm của session authentication. Vì bạn phải lưu trữ thông tin
+phiên làm việc của người dùng nên bạn phải có một bộ nhớ lưu trữ phía server. Ví dụ bạn lưu trữ trên RAM thì không thể chia sẻ
+cho các server khác được (dính DDOS hay restart server lại mất hết), lưu trữ trên database thì lại tốn kém thêm chi phí, bộ nhớ,... 
+- Bộ nhớ lưu trữ session sẽ phình to rất nhanh vì mỗi khi có một người dùng đăng nhập thì bạn lại phải lưu trữ một session id mới,
+cái này phình to nhanh lắm đấy
+- Tốc độ chậm, vì mỗi request đến server, server điều phải kiểm tra trong bộ nhớ lưu trữ xem session id có hợp lệ hay không. 
+Nếu bạn lưu trữ trên database thì tốc độ sẽ chậm hơn nữa. 
+- Khó khăn trong việc scale ngang server. Ví dụ khi server lớn lên, bạn phải có nhiều server để chịu tải hơn, thì việc chia sẻ
+session id giữa các server là một vấn đề khó khăn, kiểu gì bạn cũng phải tìm cái gì đó chung giữa các server như database chung chẳn
+hạn. Lại database, nếu nó lớn lên lại tìm cách scale database

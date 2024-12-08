@@ -1,0 +1,10 @@
+phân tích yêu cầu hệ thống, nguồn nhân lực, xử lý dữ liệu. Từ
+đó lựa chọn loại database 
+
+
+- Từ đặc tả chức năng từ đó nhận định cần lưu trữ những dữ liệu gì,
+- Lựa chọn kiểu dữ liệu, mối liên hệ giữa các thực thể
+- 
+
+
+

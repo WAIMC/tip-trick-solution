@@ -1,0 +1,89 @@
+- Create new 4 sheet
+
+	+ Sheet 1: CM Plan
+		* Overview about project : 
+			~ Project Name
+			~ PM
+			~ Reviewer
+			~ Approver
+		
+		* Role & Responsibility
+			~ No
+			~ Role in project
+			~ Full name
+			~ Account (git, skype,...)
+			~ Responsibilities
+		
+		* Project Infrastructure product
+			~ Server
+			~ Domain & hosting
+		
+		* Project Infrastructure management jobs
+			~ Tool management task
+			~ Source control 
+				% File or tool QA
+				% Detail design
+				% Test (test case, UT, IT, server test,...)
+				% Daily/weekly report
+				% Box chat
+		
+		* Project Infrastructure local
+			~ Tool (vscode, dbeaver, fork git,...)
+			~ Setup environments
+			~ Process doing task 
+			~ Process QA
+			~ Process review
+			~ Process deploy
+			~ Process add task
+			~ Process report
+			~ Business project
+			~ Overview business & source code & DB
+			~ Q&A
+			~ Convention check list
+			~ Test
+
+		* Project Folder Structure & document
+		* Backup Strategy
+		* Branch Management
+		* Device test
+
+	+ Sheet 2: detail schedule
+		* No
+		* Priority 
+			~ easy
+			~ normal
+			~ hight
+			~ urgent
+			~ immediate
+		* Type
+			~ Request
+			~ Bug
+		* Ticket ID
+		* Task title
+		* Status doing
+			~ New
+			~ In progress
+			~ Pending
+			~ Resolved
+			~ Waiting
+			~ Reviewing
+			~ Reviewed
+			~ Feedback
+			~ Closed
+		* Task owner
+		* Reviewer
+		* Code (hour)
+		* Test (hour)
+		* Review (hour)
+		* Duration (hour)
+		* Start date (date time)
+		* End time (date time)
+		* Review end time (date time)
+		* Percent of task complete
+
+	+ Sheet 3: Todo list
+		* Checkbox
+		* Status
+		* Date
+		* Deadline
+		* Task

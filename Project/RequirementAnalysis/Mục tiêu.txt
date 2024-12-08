@@ -1,0 +1,8 @@
+- Yêu cầu về mục tiêu dự án giải quyết vấn đề gì ?
+- Yêu cầu về phía người dùng hay sử dụng ra sao ?
+- Yêu cầu về quản trị thế nào ?
+- Yêu cầu về bảo mật như thế nào ?
+- Yêu cầu công nghệ gì ?
+- Yêu cầu thiết kế ra sao ?
+- Yêu cầu Marketing đến mức độ nào ?
+- 

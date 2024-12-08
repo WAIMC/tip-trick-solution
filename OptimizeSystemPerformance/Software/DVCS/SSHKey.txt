@@ -1,0 +1,100 @@
+********** SSH Key là gì?
+SSH Key (Secure Shell Key) là một cặp khóa mật mã (cryptographic keys) được sử dụng để xác thực người dùng khi kết nối đến một máy chủ 
+thông qua giao thức SSH (Secure Shell). Cặp khóa này bao gồm:
+  + Khóa công khai (Public Key): Được lưu trên máy chủ mà bạn muốn kết nối.
+  + Khóa riêng tư (Private Key): Được lưu trên máy của bạn và không bao giờ chia sẻ với ai.
+Khi bạn đăng nhập, máy chủ sử dụng khóa công khai để kiểm tra khóa riêng tư. Nếu chúng khớp, bạn được cấp quyền truy cập mà không cần nhập 
+mật khẩu (hoặc mật khẩu rất tối thiểu).
+
+
+********** SSH Key dùng để làm gì?
++ Kết nối an toàn: Được dùng để thay thế mật khẩu khi kết nối SSH đến các máy chủ từ xa.
++ Tự động hóa: Dùng trong các kịch bản (scripts) hoặc công cụ như Git để không cần nhập mật khẩu mỗi lần thực hiện hành động.
++ Bảo mật cao: Khó bị đánh cắp hơn so với mật khẩu thông thường.
+
+
+********** Sử dụng SSH Key?
+
++ Tạo SSH Key
+  - Kiểm tra SSH Key đã tồn tại trong máy chưa
+      ls ~/.ssh
+    Kết quả sẽ hiển thị các file trong thư mục ~/.ssh. Các file có tên kiểu như id_rsa và id_rsa.pub (hoặc id_ecdsa, id_ed25519) là các 
+    SSH key đã tồn tại. Nếu không có, nghĩa là bạn chưa có SSH key nào.
+  - Tạo ssh key
+    * Chạy command line này trên terminal: ssh-keygen -t rsa
+    * Hoặc chạy đầy đủ: ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+      / -t rsa: Loại thuật toán RSA (phổ biến nhất).
+      / -b 4096: Độ dài khóa (càng lớn càng an toàn) (ko cần cũng đc).
+      / -C: Một chuỗi gắn kèm để nhận diện, thường là email của bạn (ko cần cũng được).
+  - Chọn nơi lưu trữ
+    * Tiếp theo hệ thống thông báo chọn nơi lưu trữ, cái này nhập path tuyệt đối lưu trữ hoặc nhấn enter chọn mặc định (mặc định: ~/.ssh/id_rsa).
+    trong đó, ~/ là index path mỗi lần vào terminal eg: C:\\User\abc> lúc này ~/.ssh/id_rsa lưu ở -> C:\\User\abc\.ssh
+  - Nhập passphrase (ko nhập cũng được, nên dùng): nhập pass 1 lần confrim pass 1 lần là hoàn tất
+
+
++ Cài đặt kết nối
+  - Client thực hiện gửi key:
+    * Nhập command line vào terminal và copy toàn bộ nội dung: cat ~/.ssh/id_rsa.pub
+    * Hoặc mở file ~/.ssh/id_rsa.pub và copy toàn bộ nội dung
+    Gửi cho server
+  - Server kiểm tra có ssh key chưa nếu chưa tạo như trên
+  - Server nếu chưa có file ~/.ssh/authorized_keys, thì tạo file ~/.ssh/authorized_keys trống, sau đó chạy command line
+  (chmod 700 ~/.ssh và chmod 600 ~/.ssh/authorized_keys) để set quyền chủ sở hữu
+  - Thêm ssh key client vào file authorized_keys trên server
+    + Chạy command line để chỉnh sửa file: nano ~/.ssh/authorized_keys
+    + Copy và paste nội dung public key client gửi lên vào, mỗi key trên 1 dòng mới
+    + Nếu dùng nano, nhấn Ctrl + O để lưu và Ctrl + X để thoát.
+  - Khởi động lại dịch vụ SSH trên server bằng lệnh: sudo service ssh restart
+  - Client thử connect tới server: ssh user@hostname
+  trong đó user là tên account server, hostname là địa chỉ IP hoặc host của server
+
+
++ Cấu hình sử dụng 1 clien kết nối nhiều server qua ssh
+  - Tạo ssh key tương ứng với mỗi project khác nhau
+  Các step tạo ssh key tương tự như trên, nhưng phần nhập path thì nhập toàn bộ path và đặt tên riêng cho ssh key vd: id_rsa_work, id_rsa_play
+  + Sử dụng file cấu hình ~/.ssh/config để quản lý
+    - Tạo hoặc chỉnh sửa file ~/.ssh/config: nano ~/.ssh/config
+    - Thêm cấu hình cho từng SSH key:
+      # SSH key cho công ty
+        Host github-corp
+        HostName github.com
+        User git
+        IdentityFile ~/.ssh/id_rsa_work
+
+      # SSH key cho tài khoản cá nhân
+        Host github-personal
+        HostName github.com
+        User git
+        IdentityFile ~/.ssh/id_rsa_personal
+      
+      * Host: Tên bạn định nghĩa để sử dụng khi kết nối (tùy ý đặt).
+      * HostName:  IP or domain của server(host)
+      * User: Tên tài khoản đăng nhập (thường là git với GitHub/GitLab). Với các máy chủ khác, User có thể là tên tài khoản trên máy chủ 
+      đó (ví dụ: root, deploy, user123).
+      * IdentityFile: Đường dẫn đến private key mapping với file public gửi cho server tương ứng.
+  + Gửi nội dung public key vừa tạo cho server thao tác
+  + Test connect, EG:
+    ssh github-corp
+    ssh github-personal
+
+
++ Sử dụng ssh key với git (github, gitlab, gitbucket)
+  - Tạo và copy key trên máy client, bằng command line: cat ~/.ssh/id_rsa.pub
+  - Dán vào mục SSH Keys trong cài đặt tài khoản của bạn trên các nền tảng này. Có nghĩa là trên server sẽ lưu public key này vào file
+  ~/.ssh/authorized_keys của server
+  - Sử dụng Git với SSH: git clone git@github.com:your-username/repository.git
+
+
+********** Máy chủ xác định và cho phép truy cập tài nguyên như thế nào?
+Máy chủ sử dụng public key authentication để xác định và cho phép truy cập:
++ Public key: Khi bạn thêm SSH key vào máy chủ (hoặc dịch vụ như GitHub, GitLab), bạn đang thêm public key của bạn vào danh sách được phép
+(thường lưu trong file ~/.ssh/authorized_keys trên máy chủ).
+
++ Quá trình xác thực:
+  - Khi bạn kết nối từ máy khác, SSH client trên máy bạn sẽ sử dụng private key để tạo một chữ ký số (digital signature).
+  - Máy chủ sử dụng public key đã lưu để xác minh chữ ký số này.
+  - Nếu chữ ký hợp lệ, máy chủ cho phép truy cập.
+
++ Ứng dụng thực tế với source code:
+  - Với GitHub/GitLab: Bạn cần thêm public key vào phần SSH Keys trong cài đặt tài khoản.
+  - Khi pull/push code, Git client sẽ tự động sử dụng private key để xác thực với GitHub/GitLab.

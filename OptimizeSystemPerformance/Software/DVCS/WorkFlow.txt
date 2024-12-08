@@ -1,0 +1,33 @@
+remote
+- hình thức lưu trữ reponsitory
+- quản lý....
+
+- Tạo branch
+master
+dev
+stg
+trial
+product
+feature/ticket
+bug/ticker
+
+
+local
+- cách làm việc của từng mem
+
+branch
+1. khi code feature mới
+2. checkout new branch từ branch dev
+nếu là feature thì để trong feature/ticket
+nếu bug thì để trong bug/ticket
+3. code xong thì stage code lại
+4. pull code branch dev mới nhất
+5. merge qua branch đang làm
+6. unstage code mới vào
+7. fix conflict nếu có
+8. push lên branch mới
+
+convention
+- tên branch: feature_{ticket} hoặc bug_{ticket}
+- commit: refs #ticket implement ... cho feature, refs #ticket fix ... cho bug
+

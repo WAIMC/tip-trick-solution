@@ -1,0 +1,64 @@
+Test hiệu năng.
+Thực hiện trên một hệ thống, một ứng dụng, từ đó sẽ đo được một số thuộc tính:
+  Response time: Thời gian phản hồi, thời gian vào hệ thống nhanh hay chậm. Response time THẤP thì tốt.
+  Throughput: Số request mà server có thể xử lý được trong 1 đơn vị thời gian (requests / s – rps). Throughput càng CAO càng tốt.
+
+*******************
+Performance test type
+  Load testing: Đánh giá ứng dụng, tìm ngưỡng của hệ thống có thể xử lý tốt (nhưng đừng nhầm lẫn là tìm ngưỡng mà hệ thống “sập”) . Xác định được Maximum load là bao nhiêu.
+  Stress testing: Quá sức chịu đựng của hệ thống hay đánh giá ngoài khả năng chịu đựng. Tìm điểm chết của hệ thống, hệ thống có khả năng phục hồi lại không.
+  Spike testing: Thường áp dụng với hệ thống Thương mại điện tử. Đánh giá sự đột biến cao với khoảng thời gian ngắn thì hệ thống sẽ xử lý như nào.
+  Endurance testing (Soak testing): Kiểm tra độ bền của hệ thống với thời gian ít nhất là 8h.
+  Scalability testing: Test khả năng mở rộng của hệ thống.
+  Volume testing: Test số lượng bản ghi trong database lớn.
+
+
+Spike testing: VD: Như những đợt Flash sale của shoppe, lazada, thì những ngày chạy flash sale sẽ có số lượng người dùng vào rất lớn, lớn quá khả năng chịu đựng của hệ thống thì cần phải có cách xử lý. Xử lý sẽ phụ thuộc vào hệ thống yêu cầu.
+
+Khi giới thiệu đến đây, sẽ có bạn thắc mắc: “Thế Performance Testing là kiểu gì?” Thực ra, nó chẳng phải là 1 kiểu test cụ thể nào cả, nó là một thuật ngữ dùng chung cho tất cả các kiểu trên.
+
+
+***********************
+Performance test procedure
+  Identify test environment: Xác định môi trường test là môi trường nào (DEV, Staging, Production, …).
+  Plan and design tests: Lên test plan, thực hiện trong bao lâu, đưa luồng chính nào vào để test.
+  Identify performance acceptance criteria: Xác định tiêu chí đáp ứng của khách hàng như nào.
+  Configure test environment: Config hệ thống.
+  Implement test design: Thực hiện viết test script.
+  Execute test: Thực hiện Test.
+  Analysis and report: Phân tích xem tính năng nào ok, hay tính năng nào chạy chậm.
+
+*************************
+Dung Jmeter để test
+Jmeter chuyên về thực hiện Performance Testing.
+Có thể thực hiện automation test, test API.
+
+Test Plan
+  Một Test Plan mô tả một chuỗi các steps sẽ được JMeter thực thi khi chạy.
+  Là nơi lưu trữ tất cả elements như ThreadGroup, Timer, …
+  Lưu ý mỗi lần test chỉ thực hiện duy nhất trên một test plan mà thôi.
+
+Thread ThreadGroup
+  Thread Groups là tập hợp các threads.Mỗi thread đại diện cho 1 user.Về cơ bản thì mỗi thread giả lập một yêu cầu của user.
+  Những thành phần cơ bản của thread group cần chú ý:
+  Number of Threads (users)
+  Ramp-up period (seconds)
+  Loop Count
+
+  Number of Threads (users): số lượng request mà chúng ta muốn thực hiện test (hay nói cách khác đây chính là số lượng user mà chúng ta muốn giả lập để thực hiện test)
+  Ramp-up period (seconds): thời gian mà chúng ta mong muốn các user trên thực hiện trong bao lâu
+  Loop Count: tùy thuộc vào yêu cầu mà chúng ta có muốn lặp lại test plan hay không
+  Lấy Number of Threads/Ramp-up period sẽ biết được trong 1s có bao nhiêu thread được thực hiện
+
+*************
+Note
+Trong quá trình chạy JMeter mà có gặp trường hợp OutOfMemory thì nhờ các bạn chỉnh sửa size Head của JMeter, mặc định size Head chỉ chiếm 256M memory, khi test các test plan phức tạp thì hay gặp trường hợp này.
+Trong quá trình tạo test plan thì chúng ta có thể sử dụng debug sampler để kiểm tra dữ liệu.
+Trên thực tế chúng ta tùy thuộc vào yêu cầu của KH mà tạo các test plan tương ứng.Giả sử KH yêu cầu test một chức năng của hệ thống từ login cho tới lúc đặt hàng xong.Thay vì chúng ta phải tạo từng request sampler tương ứng với từng flow, để nhanh chóng thì chúng ta có thể sử dụng một extension trên Chrome là BlazeMeter.Về chi tiết cách sử dụng thì sau đây mình sẽ hướng dẫn.
+JMeter có thể được run theo 2 cách:
+Run trên GUI
+Chúng ta có thể sử dụng cmd để run (cách này thường được sử dụng khi test thực tế)
+Để run trên cmd thì chúng ta thực hiện theo các bước sau:
+cd vào thư mục bin của JMeter
+Run cmd tại đây
+jmeter -n -t [path]/{jmxFileName}.jmx -l [path]/{fileLogName}.jtl

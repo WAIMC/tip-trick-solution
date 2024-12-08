@@ -1,0 +1,25 @@
+******* Các step bắt đầu làm việc với source code
++-*/
+
++ Tổng hợp tài liệu dự án: Xin/nhờ share tài liệu dự án
+  - Tài liệu dự án: Đọc tài liệu dự án, đọc readme hoặc tài liệu hướng dẫn cài đặt
+  hoặc bất kỳ tài liệu nào được cung cấp
++ Xác định và thiết lập môi trường phát triển
+  - Xác định và cài đặt công cụ quản lý mã nguồn: Ở local cài git, git fork hoặc git kraken nếu cần.
+  Check coi đang connect bằng giao thức gì thì setting theo giao thức đó: Setting ssh key (file hướng dẫn SSHKey.txt) hoặc login account git
+  Check và setting username + email cho git trước khi commit, vì dù giao thức là gì thì server vẫn sẽ ghi nhận username và email trong config
+  git là tác giả (cái này dùng tool git bucket hoặc git fork edit cho tiện)
+  - Clone source và switch branch
+  - Xác định công nghệ phần mềm cần sử dụng: phần mềm, libraries, plugin, version,.. thông qua file readme hoặc file
+  package.json|composer.lock,...
+  - Thiết lập môi trường ảo: Cài đặt và sử dụng (wsl + docker, Virtual machine, laragon, xampp,..)
+  - Cài đặt phần mêm|công nghệ đúng version: web server apache|nginx, Ngôn ngữ lập trình (php, node, pgsql,..),
+  trình quản lý package dependence (composer, npm)
+  - Cài đặt IDE/editor và các extension để thuận tiện làm việc với dự án (vscode, phpStorm, dbeaver, redis-insight)
+  - Kiểm tra quyền truy cập đến các file, folder (nếu cần) để ko bị lỗi khi runtime
++ Cài đặt dependence nếu cần EG: npm i, composer i
++ Config file env như trong readme hoặc trong tài liệu,..
++ Thử tạo database, import data, connect cơ sở dữ liệu, fake data
++ Chạy thử dự án: truy cập host,..
++ Setting connect và chạy test nếu có:...
++ Quy trình làm việc: Tìm hiểu quy trình làm việc của nhóm như: coding convention, commit, review code, release,..

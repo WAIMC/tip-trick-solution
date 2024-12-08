@@ -1,0 +1,5 @@
+- ERD Level 1: phác thảo các thực thể là các table và mối liên
+kết hay ràng buộc thông qua khóa chính khóa ngoại của từng table
+
+- ERD Level 2: phác thảo chi tiết hơn ERD level 1, đó là thêm đầy
+đủ các field dữ liệu của từng table

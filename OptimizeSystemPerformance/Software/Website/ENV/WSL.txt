@@ -1,0 +1,66 @@
+WSL (Windows Subsystem for Linux) là một tính năng của Windows cho phép bạn chạy một hệ điều hành Linux trực tiếp trên Windows 
+mà không cần cài đặt song song (dual-boot) hoặc sử dụng máy ảo (virtual machine). WSL cung cấp môi trường Linux đầy đủ ngay 
+trên hệ điều hành Windows.
+
+
+*********************** Các phiên bản của WSL
++ WSL1:
+  - Ra mắt lần đầu trong Windows 10.
+  - Chạy Linux thông qua một lớp dịch (translation layer) trên nhân Windows.
+  - Ít hiệu năng hơn WSL2 nhưng tiêu tốn ít tài nguyên hệ thống hơn.
+
++ WSL2:
+  - Ra mắt trong Windows 10 bản 2004 trở lên và Windows 11.
+  - Sử dụng nhân Linux thực (Linux Kernel) bên trong máy ảo nhẹ (VM), mang lại hiệu năng tốt hơn và khả năng tương thích cao 
+  hơn với các ứng dụng Linux.
+  - Hỗ trợ các ứng dụng yêu cầu đầy đủ chức năng hệ thống file và mạng.
+
+
+*********************** Lợi ích của WSL
++ Không cần máy ảo: WSL không yêu cầu cài đặt phần mềm máy ảo như VirtualBox hoặc VMware.
+
++ Khả năng tương thích: Bạn có thể chạy các công cụ và ứng dụng Linux, chẳng hạn như Bash, SSH, Git, Python, Node.js, và Docker.
+
++ Tích hợp với Windows: Có thể chia sẻ file giữa Linux và Windows, sử dụng command-line Linux và truy cập hệ điều hành Windows từ WSL.
+
++ Nhẹ và nhanh: Không tiêu tốn nhiều tài nguyên như các giải pháp ảo hóa truyền thống.
+
+
+*********************** Cách hoạt động
+WSL cho phép bạn cài đặt và chạy một bản phân phối Linux (như Ubuntu, Debian, Kali Linux) như một ứng dụng. Sau khi cài đặt, 
+bạn có thể mở terminal Linux ngay trên Windows để sử dụng các lệnh Linux.
+
+
+*********************** Các ứng dụng của WSL
++ Phát triển phần mềm:
+  - Chạy các môi trường phát triển Linux mà không cần rời khỏi Windows.
+  - Hỗ trợ các công cụ như Docker, Kubernetes, hoặc bất kỳ ứng dụng nào chạy trên Linux.
+
++ Học tập và thử nghiệm:
+  - WSL là công cụ tuyệt vời để học Linux mà không phải rời khỏi Windows.
+  - Dễ dàng thiết lập và sử dụng để thử nghiệm các công cụ Linux.
+
++ Tích hợp DevOps: Tích hợp với các công cụ CI/CD hoặc các giải pháp triển khai trên cloud.
+
+
+*********************** Cài đặt
++ Trên windows 10 hoặc 11, mở terminal và chạy (chạy ở đâu thì nó vẫn cài ở ổ C:): wsl --install
++ Chọn bản phân phối Linux muốn cài qua microsoft store hoặc chạy lệnh
++ Sau khi cài xong, check bản phân phối cần cài, chạy lệnh trên terminal: wsl --list --online
++ Chọn bản phân phối và cài đặt, chạy lệnh trên terminal (ở đây chọn Ubuntu): wsl --install -d <DistroName> 
++ Nhập username và password: 
++ Reset máy và check : wsl --list
+
+
+
+
++ Mặc định sẽ cài ổ C:, chuyển sang quản lý ở ổ D:
+  - Export phân phối WSL ra file
+    * wsl --list --verbose
+    * wsl --export <DistroName> D:\wsl\<DistroName>.tar
+  - Gỡ đăng ký phân phối cũ
+    * wsl --unregister <DistroName>
+  - Import phân phối vào ổ D:
+    * wsl --import <DistroName> D:\wsl\<DistroName> D:\wsl\<DistroName>.tar --version 2
++ Nếu muốn cài distro wsl mới mặc định trên D: mở regedit > HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lxss > 
+thêm DefaultBasePath (string) với giá trị D:\wsl

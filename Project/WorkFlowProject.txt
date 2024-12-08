@@ -1,0 +1,9 @@
+******************** Flow bắt đầu thực hiện 1 project
+
+
+1. Phân tích yên cầu
+  - Phân tích hiện trạng hiện có: Ngân sách, đề tài thực hiện, mục tiêu, nguồn lực,...
+  - Yêu cầu hệ thống
+    + Phần cứng: thiết bị công nghệ
+    + Phần mềm: ENV, technical,...
+    + 

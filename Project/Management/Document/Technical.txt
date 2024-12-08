@@ -1,0 +1,4 @@
+- ngôn ngữ lập trình
+	+ các ngôn ngữ lập trình
+	+ các thông tin về ngôn ngữ lập trình (ưu nhược, version,..)
+- công nghệ lập trình, package, library, framework

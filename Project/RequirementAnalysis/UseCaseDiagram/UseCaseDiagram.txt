@@ -1,0 +1,7 @@
+***************** Bản phác thảo mối liên hệ giữa các thực thể
+Từ yêu cầu ban đầu tiến hành phác thảo các thực thể và các mối liên hệ
+
++ Use case diagram level 1 : Phác thảo các mối liên hệ của các thực thể
+1 cách khái quát và tổng quan vd ảnh UseCaseDiagramLevel1.png
++ Use case diagram level 2: Phác thảo các mối liên hệ của từng thực thể
+1 cách chi tiết vd ảnh  UseCaseDiagramLevel2.png

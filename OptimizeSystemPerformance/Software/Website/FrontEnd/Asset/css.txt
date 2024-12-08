@@ -1,0 +1,14 @@
+css: https://css-tricks.com/rems-ems/
+https://meyerweb.com/eric/tools/css/reset/
+
+-	use ream for
+	-	setting font-size
+	-	layout width, height
+-	background color: #1E1E2E
+-	background color banner: #27293D
+-	color-blue : #6edff6
+-	color-green: #79dfc1
+-	color-red: #ec250d
+-	color-purple: #ba54f5
+theme: https://seantheme.com/color-admin/admin/apple/index.html
+	https://themeon.net/nifty/v3.0.1/ui-elements/buttons/

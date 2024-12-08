@@ -1,0 +1,2 @@
+là lược đồ DB, mô tả các table và các mối liên kết giữa các table
+thông qua khóa chính, khóa ngoại

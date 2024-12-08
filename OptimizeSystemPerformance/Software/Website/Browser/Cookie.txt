@@ -1,0 +1,63 @@
+##### Mô tả chung
+Cookie (hay còn gọi là HTTP cookie, web cookie, Internetie, cookie trình duyệt): Là một file văn bản nhỏ chứa data dạng key-value được trình
+duyệt lưu trữ trên thiết bị của người dùng (máy tính, điện thoại, thiết bị khác) khi truy cập một trang web, bị giới hạn dung lượng. Nó được
+sử dụng để lưu trữ thông tin tạm thời hoặc lâu dài liên quan đến người dùng.
+
+##### Nguyên lý hoạt động
++ Ban đầu được tạo ra khi server trả về response với header set-cookie hoặc tạo bằng javascript hoặc tạo bằng tay (dev tool)
++ Mỗi lần gửi request tiếp theo hoặc khi truy cập 1 trang web, browser sẽ check xem có cookie nào được lưu trữ trong domain (web) đó ko, 
+nếu có  sẽ tự động đính kèm cookie vào domain đó, do đó có thể khai thác tấn công csrf. Cookie được liên kết với domain mà nó được tạo ra, 
+nên chỉ domain đó mới được truy cập vào cookie đó.
++ Cookie được lưu trữ trên bộ nhớ cục bộ của trình duyệt trên thiết bị của người dùng. Vị trí cụ thể phụ thuộc vào loại trình duyệt và hệ điều hành:
+  - Các file cookie của Google Chrome được lưu trữ tại: /Users/<username>/Library/Application Support/Google/Chrome/Default/Cookies
+  - Các file cookie của Firefox được lưu trữ tại: /Users/<username>/Library/Application Support/Firefox/Profiles/<profile folder>/cookies.sqlite
+  - Các file cookie của Safari được lưu trữ tại: /Users/<username>/Library/Cookies/Cookies.binarycookies
++ Cập nhật hay xóa cookie: Server hoặc client (javascript) có thể xóa hoặc chỉnh sửa, cập nhật.
+
+##### Ứng dụng
++ Quản lý phiên làm việc (session management): Ghi nhớ trạng thái đăng nhập, giỏ hàng, hoặc profile.
++ Cá nhân hóa nội dung: Lưu các tùy chọn của người dùng như ngôn ngữ, giao diện.
++ Theo dõi và phân tích: Hỗ trợ các công cụ theo dõi hoạt động của người dùng để phân tích hành vi đề xuất nội dung, quảng cáo.
+
+
+##### Các vấn đề và giải pháp khi sử dụng
++ Bảo mật riêng tư
+  - Vấn đề: Chứa thông tin của user 
+  - Giải pháp: Bảo vệ và xử lý đúng cách, ko lưu trữ thông tin nhạy cảm để tránh bị lộ thông tin hoặc xử dụng sai mục đích
+
++ Giới hạn kích thước: 4kb -> lưu trữ thông tin cần thiết
+
++ Giới hạn domain: 20 cookie -> thay thế bằng phương thức lưu trữ khác, session storage hoặc local storage...
+
++ Ảnh hưởng hiệu suất: Mỗi request đều đính kèm các cookie liên quan -> Loại bỏ cookie cũ ko liên quan
+
++ Session Cookies: Đây là loại Cookies chỉ tồn tại trong bộ nhớ tạm khi bạn khởi động trình duyệt web. Session Cookies không có thời hạn 
+lưu trữ và bị trình duyệt xóa bỏ khi phiên làm việc kết thúc. Nghĩa là cookie không set time tồn tại
+
++ Persistent Cookies: Loại Cookies này sẽ tự động bị xóa bỏ sau một khoảng thời gian được thiết lập trước. Nghĩa là set time tồn tại
+
++ Secure Cookies: Loại Cookies này chỉ được gửi và nhận khi giao thức HTTPS được kích hoạt tức là giao thức phải được mã hóa. Tránh được
+lỗ hổng MITM (man in the middle attack). Cả server và client đều có thể set được
+
++ HTTP-only Cookies: Chỉ được tạo ra và gửi từ server, loại Cookies này không được truy cập bởi get/set từ phía người dùng như JavaScript
+do đó tránh được XSS
+
++ Same-site Cookies: Loại Cookies này chỉ được gửi thông qua các yêu cầu có cùng nguồn gốc từ một tên miền mục tiêu (cùng 1 trang web),
+Cả server và client đều set được. Phòng tránh được CSRF.
+Vì cookie được gửi tự động trong mỗi request, nên hacker tạo website giả lừa user vào và dùng js auto submit form đến web mà user đã login,
+lúc này request đó đc server verify xác định user gửi lên tiếp tục xử lý, mà hacker ko cần login account của user hoặc lấy cắp cookie.
+
++ CORF: Là cơ chế chặn hoặc cho phép 1 request dựa vào cross-origin (bao gồm: scheme, domain, port).
+  - Vấn đề: Server ngăn chặn request ngoại lai truy cập tài nguyên: Tài nguyên web A phục vụ cho user web A nhưng crawler có thể tạo request
+  từ các origin khác nhau để crawl data. Lấy cắp cookie login và thực hiện các request ở origin khác.
+  - Giải pháp:
+    * Server: Config header cho phép truy cập trên origin nào (white list), method nào đc cho phép, loại header đc chấp nhận (vd: content-type=...)
+    * Client: Mỗi browser request sẽ tự động thêm origin vào header, sẽ báo lỗi nếu ko đc phép từ response server.
+
++ Third-party Cookies: Cookies loại này được sử dụng rộng rãi bởi các công ty quảng cáo để thu thập thông tin về hành vi truy cập của 
+người dùng trong những trang web mà họ ghé qua.
+
++ Super Cookies: Các đối tượng xấu thường hay tận dụng Super Cookies để ngụy trang các yêu cầu bất hợp pháp thành hợp pháp và đánh lừa 
+người dùng truy cập.
+
++ Zombie Cookies: Đây là loại Cookies đã bị xóa.

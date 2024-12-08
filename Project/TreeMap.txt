@@ -1,0 +1,37 @@
+********************* Bản đồ cây thư mục khi thực hiện một dự án
++ - * /
+
+
++ Requirement analysis
+  - Ngân sách
+  - Mục tiêu
+  - Đề tài
+  - Resource
+    * Nhân sự
+    * System
+      / Hardware
+      / Software
+  - UseCaseDiagram
+  - Functional specification (Đặc tả chức năng)
++ Management
+  - Overview
+  - Detail schedule
++ Design
+  - Database
+    * ERD
+    * Overview
+  - UI
++ Implement
+  - EmploymentStartProject (những bước bắt đầu làm việc với source code)
+
++ Test
+
++ Marketing
+
++ Deployment
+  - Hosting, domain
+
++ Final
+  - Kết quả
+  - Hạn chế
+  - Hướng phát triển

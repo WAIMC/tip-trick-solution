@@ -1,0 +1,111 @@
+Docker là platform open source cung cấp môi trường để dev, shipping, run 1 application. Quản lý cơ sở hạ tầng hiệu quả
+cho phép tự động hóa nhiều tác vụ như test, deploy giúp tăng hiệu suất làm việc. Đồng bộ môi trường ở mọi nơi được sử dụng.
+
+
+*************** Các thành phần và khái niệm trong docker
+- Docker desktop: Là ứng dụng cài đặt trên nhiều hệ điều hành máy tính. Docker desktop bao gồm docker client, docker daemon,
+docker compose, Docker Content Trust, Kubernetes, Credential Helper. Docker desktop cung cấp UI để thao tác với những thành phần
+trên.
+
+- Docker client: Là cách thức phổ biến để user tương tác với docker. Khi muốn docker thực hiện điều gì đó, thì cần thao tác
+trên docker client (vd: docker run, docker build,...), sau đó câu lệnh sẽ gửi đến docker daemon để thực hiện. Docker client 
+có thể tương tác với 1 hoặc nhiều docker daemon, có thể cùng hệ thống hoặc kết nối remote desktop docker daemon, cả hai đều dùng
+restful api để tương tác.
+
+- Docker daemon: Tiếp nhận xử lý API. Quản lý images, containers, networks, volumes. Có thể tương tác với daemon khác.
+
+- Docker registries: Lưu trữ docker images. Trong docker registry có 1 khái niệm đó là Docker hub,
+đây là 1 registry public và default.  Khi chạy lệnh Pull (docker pull) nó sẽ pull images từ cấu hình registry, push cũng tương tự
+
+- Docker hub: Là một nền tảng dịch vụ lưu trữ và chia sẻ các container images của Docker. Đây là nơi bạn có thể tải lên,
+tải xuống và quản lý các Docker images để triển khai ứng dụng hoặc dịch vụ trong môi trường container
+
+- Docker images: Là 1 template đóng gói các package và dependence cho ứng dụng, dùng để tạo container. 
+Image bao gồm tất cả những gì ứng dụng cần để chạy  (code, runtime, libray, tool, v.v.).
+Image tạo từ 1 file Dockerfile (tập tin cấu hình các bước để build image) hoặc pull từ registry như docker hub
+Có thể dùng cho nhiều container. Docker images là bản "static" còn docker container là "dynamic" hay "running"
+
+- Docker container: Là một môi trường ảo, phiên bản running của docker images. Chứa mọi thứ cần cho app, được cách ly hoàn toàn nhưng
+sử dụng chung hệ điều hành của máy chủ. Container giúp đảm bảo rằng ứng dụng sẽ chạy ổn định bất kể môi trường triển khai là gì 
+(máy tính cá nhân, máy chủ vật lý, hay trên đám mây).
+
+- Docker volumes: Là kho lưu trữ data cho container. Bảo toàn data khi container bị xóa hoặc chia sẻ data cho container khác
+
+- Docker build: Là quá trình tạo một Docker image từ một Dockerfile. Docker cache từng bước trong Dockerfile, giúp tăng tốc các 
+lần build sau.
+
+- Docker Scout là một công cụ phân tích bảo mật và tối ưu hóa cho Docker images.
+
+
+************** Lợi ích của Docker
++ Khả năng di chuyển (Portability): Docker container có thể chạy nhất quán trên bất kỳ môi trường nào, từ máy tính cá nhân
+đến hệ thống đám mây.
+
++ Hiệu suất cao (Efficiency): So với máy ảo (VM), container nhẹ hơn và khởi động nhanh hơn vì chúng dùng chung nhân (kernel)
+của hệ điều hành.
+
++ Quản lý phụ thuộc dễ dàng: Docker giúp đóng gói mọi thứ ứng dụng cần, loại bỏ xung đột giữa các môi trường phát triển
+và triển khai.
+
++ Tăng cường năng suất: Docker hỗ trợ việc triển khai ứng dụng nhanh chóng và dễ dàng nhân bản môi trường cho nhiều lập trình viên.
+
+
+************** Ứng dụng của docker
++ Phát triển phần mềm: Tạo môi trường phát triển đồng nhất cho các lập trình viên.
+
++ Triển khai ứng dụng: Đảm bảo ứng dụng chạy ổn định từ môi trường phát triển, staging đến production.
+
++ Microservices: Triển khai từng thành phần của hệ thống microservices trong các container riêng biệt.
+
++ Tự động hóa CI/CD: Docker giúp tích hợp và triển khai liên tục dễ dàng hơn trong các pipeline DevOps.
+
+
+*************** Step cài docker
++ Cài WSL (file: WSL.txt)
++ Download docker desktop app
++ Mặc định cài click double vào 'Docker Desktop Installer.exe' sẽ cài ở ổ C:\, chuyển qua ổ D:\ để quản lý
++ Chuyển file "Docker Desktop Installer.exe" vào driver D:\, và bật CMD ở drive D:\
++ Trong ổ D: check coi có "D:\Program Files\Docker\Docker" chưa, chưa thì tạo
++ Mở terminal chạy: 
+  start /w "" "D:\Docker Desktop Installer.exe" install --accept-license  --installation-dir="D:\Program Files\Docker\Docker" --wsl-default-data-root="D:\wsl"
+  Trong đó: 
+    - "--installation-dir=D:\Program Files\Docker\Docker" chỉ định nơi lưu trữ
+    - "--wsl-default-data-root=D:\wsl" chỉ định nơi truy cập WSL connect
+
+*************** Step cài ENV
++ Xác định công nghệ, thư viện,... cần có cho ENV. VD: source laravel cần nginx or apache, php, mysql or postgresl,..
++ Mỗi 1 project tạo 1 folder riêng để quản lý ENV. Mỗi công nghệ, thư viện tạo folder đặt tên tương tự và bên trong tạo 1 file Dockerfile
+VD: project A, chạy source laravel cần cài nginx, php, postgresl, redis -> cây thư mục như sau
+  project A/
+  ├── docker/
+  │   ├── nginx/
+  │   │   └── default.conf
+  │   ├── php/
+  │   │   └── Dockerfile
+  │   ├── postgresl/
+  │   │   └── Dockerfile
+  │   └── redis/
+  │       └── Dockerfile
+  ├── docker-compose.yml
+
++ Dockerfile:  là một tệp văn bản đơn giản, chứa các lệnh được sử dụng để xây dựng một Docker Image. Mỗi lệnh trong Dockerfile là
+một chỉ dẫn để cài đặt phần mềm, sao chép tệp, hoặc thực hiện các thao tác khác trên môi trường container.
++ docker-compose.yml:  là tệp cấu hình định nghĩa cách thức triển khai và liên kết nhiều container cùng một lúc. Nó giúp quản lý
+các ứng dụng phức tạp với nhiều dịch vụ, chẳng hạn như ứng dụng web, cơ sở dữ liệu, cache,...
++ Viết mã cấu hình công nghệ cần thiết trong các file Dockerfile, docker-compose.yml
++ Update file env trong source laravel tương ứng với config trong Dockerfile
++ Chạy lệnh sau trong folder chứa file docker-compose.yml
+  # Tạo và khởi động các container
+  docker-compose up -d
+
+  # Cấp quyền cho thư mục storage và bootstrap/cache
+  docker exec -it laravel_app chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+  # Cài đặt dependencies của Laravel
+  docker exec -it laravel_app composer install
+
+  # Tạo key cho ứng dụng Laravel
+  docker exec -it laravel_app php artisan key:generate
++ Mỗi khi thêm/sửa/xóa Dockerfile thì chạy lại container
+  docker-compose build app
++ Dữ liệu MySQL or postgresl sẽ được lưu trong volume dbdata để tránh mất mát khi khởi động lại container.
